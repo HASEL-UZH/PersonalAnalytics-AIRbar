@@ -10,7 +10,7 @@ module.exports = {
   publish: {
     provider: 'github',
     owner: 'HASEL-UZH',
-    repo: 'PersonalAnalytics'
+    repo: 'PersonalAnalytics-AIRbar'
   },
   afterSign: "scripts/notarize.cjs",
   mac: {
