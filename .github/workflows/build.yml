@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - main
-      - feature-build-airbar
+      - feature-build-airbar # OTODO: 
   workflow_dispatch: # manual triggering
 
 env:
@@ -15,19 +15,21 @@ jobs:
     runs-on: ${{ matrix.os }}
     defaults:
       run:
-        working-directory: src/electron
+        working-directory: PersonalAnalytics-AIRbar/src/electron # ***AIRbar
     strategy:
       matrix:
         include:
           - os: windows-latest
-          - os: macos-latest
-            mac_arch: arm64
-          - os: macos-latest
-            mac_arch: x64
+          # OTODO: 
+          # - os: macos-latest
+          #   mac_arch: arm64
+          # - os: macos-latest
+          #   mac_arch: x64
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: true
+          path: PersonalAnalytics-AIRbar # ***AIRbar
 
       # ***AIRBAR - START
       - name: Checkout self reflection (AIRbar) repo 
@@ -35,6 +37,7 @@ jobs:
         with:
           repository: HASEL/PA.SelfReflection
           token: ${{ secrets.GH_TOKEN }}  # since it's a private repo
+          path: PA.SelfReflection
       # ***AIRBAR - END
 
       - name: Setup Node
