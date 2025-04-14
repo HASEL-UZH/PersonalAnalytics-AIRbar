@@ -15,8 +15,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     defaults:
       run:
-        # OTODO: working-directory: PersonalAnalytics-AIRbar/src/electron # ***AIRbar
-        working-directory: src/electron
+        working-directory: PersonalAnalytics-AIRbar/src/electron # ***AIRbar
     strategy:
       matrix:
         include:
@@ -30,7 +29,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true
-          # OTODO: path: PersonalAnalytics-AIRbar # ***AIRbar
+          path: PersonalAnalytics-AIRbar # ***AIRbar
 
       # ***AIRBAR - START
       - name: Checkout self reflection (AIRbar) repo 
@@ -38,7 +37,7 @@ jobs:
         with:
           repository: HASEL-UZH/PA.SelfReflection
           token: ${{ secrets.GH_TOKEN }}  # since it's a private repo
-          # OTODO: path: PA.SelfReflection
+          path: PA.SelfReflection
       # ***AIRBAR - END
 
       - name: Setup Node
