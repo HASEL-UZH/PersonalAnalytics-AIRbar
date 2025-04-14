@@ -1,10 +1,9 @@
-name: Build and Publish PersonalAnalytics
+name: Build and Publish PersonalAnalytics-AIRbar # ***AIRbar
 on:
   push:
     branches:
       - main
       - feature-build-airbar # OTODO: 
-  workflow_dispatch: # manual triggering
 
 env:
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -15,7 +14,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     defaults:
       run:
-        working-directory: PersonalAnalytics-AIRbar/src/electron # ***AIRbar
+        # OTODO: working-directory: PersonalAnalytics-AIRbar/src/electron # ***AIRbar
+        working-directory: src/electron
     strategy:
       matrix:
         include:
@@ -29,15 +29,21 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true
-          path: PersonalAnalytics-AIRbar # ***AIRbar
-
+          # OTODO: path: PersonalAnalytics-AIRbar # ***AIRbar
+      
+      # OTODO: debug
+      - name: Debug Token and Repository Access
+        run: |
+          echo "Checking access to HASEL-UZH/PA.SelfReflection..."
+          curl -H "Authorization: token ${{ secrets.GH_TOKEN }}" https://api.github.com/repos/HASEL-UZH/PA.SelfReflection
+          
       # ***AIRBAR - START
-      - name: Checkout self reflection (AIRbar) repo 
+      - name: Checkout PA.SelfReflection (private AIRbar repo)
         uses: actions/checkout@v4 
         with:
           repository: HASEL-UZH/PA.SelfReflection
-          token: ${{ secrets.GH_TOKEN }}  # since it's a private repo
-          path: PA.SelfReflection
+          # token: ${{ secrets.GH_TOKEN }} 
+          # OTODO: path: PA.SelfReflection
       # ***AIRBAR - END
 
       - name: Setup Node
