@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - feature-build-airbar
   workflow_dispatch: # manual triggering
 
 env:
@@ -29,7 +30,7 @@ jobs:
           submodules: true
 
       # ***AIRBAR - START
-      - name: Checkout other repo 
+      - name: Checkout self reflection (AIRbar) repo 
         uses: actions/checkout@v4 
         with:
           repository: HASEL/PA.SelfReflection
