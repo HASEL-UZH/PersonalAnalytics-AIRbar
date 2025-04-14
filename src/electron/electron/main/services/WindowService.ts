@@ -42,6 +42,10 @@ export class WindowService {
 
   public async init(): Promise<void> {
     await this.createTray()
+    // ***AIRBAR - START
+    const { createRetrospectionWindow } = await import('@external/main/services/WindowService')
+    createRetrospectionWindow()
+    // ***AIRBAR - END
   }
 
   public async createExperienceSamplingWindow(isManuallyTriggered: boolean = false) {
@@ -390,6 +394,14 @@ export class WindowService {
         click: async () => {
           const { createPlanningViewWindow } = await import('@external/main/services/WindowService')
           createPlanningViewWindow(true)
+        }
+      },
+      {
+        label: 'Open Retrospection',
+        visible: !!studyConfig.trackers.taskTracker?.enabled,
+        click: async () => {
+          const { createRetrospectionWindow } = await import('@external/main/services/WindowService')
+          createRetrospectionWindow()
         }
       },
       // ***AIRBAR - END

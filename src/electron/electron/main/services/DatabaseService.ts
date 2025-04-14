@@ -60,7 +60,7 @@ export class DatabaseService {
       await this.dataSource.initialize();
       LOG.info('Database connection established');
     } catch (error) {
-      LOG.error('Database connection failed', error);
+      LOG.error('Database connection failed', error, error.stack);
     }
   }
 

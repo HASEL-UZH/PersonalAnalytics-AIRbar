@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory, Router } from 'vue-router';
+import { createRouter, createWebHashHistory, Router } from 'vue-router'
 
 const router: Router = createRouter({
   history: createWebHashHistory(),
@@ -18,6 +18,11 @@ const router: Router = createRouter({
       path: '/taskbar-view',
       name: 'Taskbar View',
       component: () => import('@externalVue/renderer/views/TaskBarView.vue')
+    },
+    {
+      path: '/retrospection',
+      name: 'Retrospection',
+      component: () => import('@externalVue/renderer/views/RetrospectionView.vue')
     },
     // ***AIRBAR - END
     {
@@ -55,6 +60,6 @@ const router: Router = createRouter({
       component: () => import('../views/DataExportView.vue')
     }
   ]
-});
+})
 
-export default router;
+export default router
