@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - main
-      - feature-build-airbar # OTODO: 
+      - feature-build-airbar # OTODO: remove after testing
 
 env:
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -15,16 +15,14 @@ jobs:
     defaults:
       run:
         working-directory: PersonalAnalytics-AIRbar/src/electron # ***AIRbar
-        # working-directory: src/electron
     strategy:
       matrix:
         include:
           - os: windows-latest
-          # OTODO: 
-          # - os: macos-latest
-          #   mac_arch: arm64
-          # - os: macos-latest
-          #   mac_arch: x64
+          - os: macos-latest
+            mac_arch: arm64
+          - os: macos-latest
+            mac_arch: x64
     steps:
       - uses: actions/checkout@v4
         with:
