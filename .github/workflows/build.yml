@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - main
-      - feature-build-airbar # OTODO: remove after testing
 
 env:
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
