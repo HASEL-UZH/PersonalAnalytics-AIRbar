@@ -11,22 +11,8 @@ import fse from 'fs-extra'; // ***AIRBAR
 export default defineConfig(({ command }) => {
   fs.rmSync('dist-electron', { recursive: true, force: true });
  
-  // ***AIRBAR - START
-  // Path to the task/goal setting component (PA.SelfReflection)
-  // PA.SelfReflection should be in the same folder as PersonalAnalytics  
-  const externalDir = path.resolve(__dirname, '../../../PA.SelfReflection/src'); 
-  const dynDir = path.resolve(__dirname, 'external/dyn')
-  if (fs.existsSync(dynDir)) {
-    fs.rmSync(dynDir, { recursive: true, force: true });
-  }
-  if (fs.existsSync(externalDir)) {
-    console.log(`Copying PA.SelfReflection component from ${externalDir} to ${dynDir}`);
-    fse.copySync(externalDir, dynDir);
-  } else {
-    throw new Error(`PA.SelfReflection component not found at ${externalDir}.`);
-  }
-  // ***AIRBAR - END
-      
+  const selfReflectionDir = path.resolve(__dirname, 'PA.SelfReflection/src') // ***AIRBAR
+       
   const isServe = command === 'serve';
   const isBuild = command === 'build';
   const sourcemap = isServe || !!process.env.VSCODE_DEBUG;
@@ -36,7 +22,7 @@ export default defineConfig(({ command }) => {
       // ***AIRBAR - START
       // this works for the renderer files, but does not work for the main files
       alias({
-        entries: [ { find: '@externalVue', replacement: dynDir} ]
+        entries: [ { find: '@externalVue', replacement: selfReflectionDir} ]
       }),
       // ***AIRBAR - END
       vue(),
@@ -54,7 +40,7 @@ export default defineConfig(({ command }) => {
                 plugins:  
                   // for the main files...
                   alias({
-                    entries: [ { find: '@external', replacement: dynDir } ]
+                    entries: [ { find: '@external', replacement: selfReflectionDir } ]
                 }),
                 // ***AIRBAR - END
                 
