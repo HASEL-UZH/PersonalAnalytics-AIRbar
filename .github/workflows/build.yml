@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - main
-      - feature/releases # OTODO: remove
 
 env:
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -18,11 +17,11 @@ jobs:
     strategy:
       matrix:
         include:
-          # - os: windows-latest OTODO:
+          - os: windows-latest
           - os: macos-latest
             mac_arch: arm64
-          # - os: macos-latest OTODO:
-          #   mac_arch: x64
+          - os: macos-latest
+            mac_arch: x64
     steps:
       - uses: actions/checkout@v4
         with:
@@ -60,12 +59,3 @@ jobs:
           AZURE_CERT_PROFILE_NAME: ${{ secrets.AZURE_CERT_PROFILE_NAME }}
           CSC_LINK: ${{ secrets.CSC_LINK }}
           CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-      - name: Upload Build Artifacts # OTODO: remove
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.os }}-${{ matrix.mac_arch || 'default' }}-build
-          path: |
-            src/electron/release/**/*.exe
-            src/electron/release/**/*.dmg
-            src/electron/release/**/*.zip
-          retention-days: 5
