@@ -6,4 +6,4 @@
 	url = https://github.com/HASEL-UZH/PA.UserInputTracker
 [submodule "src/electron/PA.SelfReflection"]
 	path = src/electron/PA.SelfReflection
-	url = https://github.com/HASEL-UZH/PA.SelfReflection.git
+	url = https://github.com/HASEL-UZH/PA.SelfReflection
