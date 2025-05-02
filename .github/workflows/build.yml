@@ -14,7 +14,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     defaults:
       run:
-        working-directory: PersonalAnalytics-AIRbar/src/electron # ***AIRbar
+        working-directory: src/electron
     strategy:
       matrix:
         include:
@@ -26,16 +26,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          submodules: true
-          path: PersonalAnalytics-AIRbar # ***AIRbar
-          
+          submodules: true          
       # ***AIRBAR - START
       - name: Checkout PA.SelfReflection (private AIRbar repo)
         uses: actions/checkout@v4 
         with:
           repository: HASEL-UZH/PA.SelfReflection
           token: ${{ secrets.GH_TOKEN }} 
-          path: PA.SelfReflection
+          path: ../PA.SelfReflection
       # ***AIRBAR - END
 
       - name: Setup Node
@@ -79,7 +77,7 @@ jobs:
         with:
           name: ${{ matrix.os }}-${{ matrix.mac_arch || 'default' }}-build
           path: |
-            PersonalAnalytics-AIRbar/src/electron/release/**/*.exe
-            PersonalAnalytics-AIRbar/src/electron/release/**/*.dmg
-            PersonalAnalytics-AIRbar/src/electron/release/**/*.zip
+            src/electron/release/**/*.exe
+            src/electron/release/**/*.dmg
+            src/electron/release/**/*.zip
           retention-days: 5
