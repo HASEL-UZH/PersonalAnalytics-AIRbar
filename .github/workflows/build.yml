@@ -27,8 +27,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true    
-        env: # OTODO: remove
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          token: ${{ secrets.GH_TOKEN }}
       - name: Setup Node
         uses: actions/setup-node@master
         with:
