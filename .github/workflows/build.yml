@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - main
-      - feature/releases
+      - feature/releases # OTODO: remove
 
 env:
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true    
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ secrets.GH_TOKEN }} # needed for private ***AIRbar repo
       - name: Setup Node
         uses: actions/setup-node@master
         with:
