@@ -10,7 +10,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build && electron-builder --config electron-builder.config.cjs",
+    "build": "vue-tsc --noEmit && vite build && electron-builder --config electron-builder.config.cjs --publish onTagOrDraft",
     "build:mac": "npm run build:mac:arm64 && npm run build:mac:x64",
     "build:mac:arm64": "vue-tsc --noEmit && vite build && electron-builder --mac --arm64 --config electron-builder.config.cjs",
     "build:mac:x64": "vue-tsc --noEmit && vite build && electron-builder --mac --x64 --config electron-builder.config.cjs",
