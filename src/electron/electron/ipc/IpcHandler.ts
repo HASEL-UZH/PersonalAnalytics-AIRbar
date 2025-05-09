@@ -79,6 +79,14 @@ export class IpcHandler {
 
     // ***AIRBAR - START
     if (studyConfig.trackers.taskTracker?.enabled) {
+      // we'll misuse this location here to initialze the settings of the airbar
+      const { setSettings } = await import('@external/main/settings/Settings');
+      setSettings(
+        studyConfig.trackers.taskTracker.enabledTaskbar,
+        studyConfig.trackers.taskTracker.enabledRetrospection
+      )
+      
+      // initialize the additional ipc handlers used for the airbar frontend
       const { actions } = await import('@external/main/ipc/IpcHandler'); 
       Object.keys(actions).forEach((action: string) => {
         this.actions[action] = actions[action];

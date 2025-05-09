@@ -16,7 +16,9 @@ const studyConfig: StudyConfiguration = {
   trackers: {
     // ***AIRBAR - START
     taskTracker: {
-      enabled: true
+      enabled: true,
+      enabledTaskbar: false,
+      enabledRetrospection: false // TODO: implement once feature is ready
     },
     // ***AIRBAR - END
     windowActivityTracker: {

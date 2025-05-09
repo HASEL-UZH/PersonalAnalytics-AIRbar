@@ -389,7 +389,7 @@ export class WindowService {
         visible: !!studyConfig.trackers.taskTracker?.enabled,
         click: async () => {
           const { createPlanningViewWindow } = await import('@external/main/services/WindowService')
-          createPlanningViewWindow(true)
+          createPlanningViewWindow()
         }
       },
       // ***AIRBAR - END
