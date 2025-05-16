@@ -386,12 +386,24 @@ export class WindowService {
       // ***AIRBAR - START
       {
         label: 'Open Task Planning',
-        visible: !!studyConfig.trackers.taskTracker?.enabled,
+        visible: !!studyConfig.trackers.taskTracker?.enabled && settings.enabledAirbar,
         click: async () => {
           const { createPlanningViewWindow } = await import('@external/main/services/WindowService')
           createPlanningViewWindow()
         }
       },
+      // {
+      //   label: 'Open Taskbar',
+      //   visible:
+      //     !!studyConfig.trackers.taskTracker?.enabled
+      //     && !!studyConfig.trackers.taskTracker?.enabledTaskbar
+      //     && settings.enabledAirbarTaskbar
+      //     && settings.enabledAirbar,
+      //   click: async () => {
+      //     const { createTaskBarWindow } = await import('@external/main/services/WindowService')
+      //     createTaskBarWindow()
+      //   }
+      // },
       // ***AIRBAR - END
       {
         label: 'Open Settings',

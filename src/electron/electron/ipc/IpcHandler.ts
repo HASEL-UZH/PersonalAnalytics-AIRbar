@@ -80,7 +80,7 @@ export class IpcHandler {
     // ***AIRBAR - START
     if (studyConfig.trackers.taskTracker?.enabled) {
       // we'll misuse this location here to initialze the settings of the airbar
-      const { setSettings } = await import('@external/main/settings/Settings');
+      const { setSettings } = await import('@external/main/settings/ResearcherSettings');
       setSettings(
         studyConfig.trackers.taskTracker.enabledTaskbar,
         studyConfig.trackers.taskTracker.enabledRetrospection
@@ -159,6 +159,27 @@ export class IpcHandler {
     const settings: Settings = await Settings.findOne({ where: { onlyOneEntityShouldExist: 1 } });
     settings[prop] = value;
     await settings.save();
+
+    // ***AIRBAR - START
+    const { closePlanningWindow, 
+      closeTaskBarWindow, 
+      createPlanningOrTaskbarWindow,
+      reloadTaskBarWindowIfOpen } = await import('@external/main/services/WindowService')
+    if (prop === 'enabledAirbar' && !value) {
+      await closePlanningWindow()
+      await closeTaskBarWindow()
+    } else {
+      await createPlanningOrTaskbarWindow()
+    }
+
+    if (prop === 'enabledAirbarTaskbar' && !value) {
+      await closePlanningWindow()
+    }
+
+    if (prop === 'enableAirbarTaskbarTimeTracking') {
+      reloadTaskBarWindowIfOpen()
+    }
+    // ***AIRBAR - END
   }
 
   private async getSettings(): Promise<Settings> {
