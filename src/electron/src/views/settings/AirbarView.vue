@@ -5,10 +5,12 @@ import { onMounted, ref } from 'vue'
 import typedIpcRenderer from '../../utils/typedIpcRenderer'
 import Switch from '../../components/Switch.vue'
 import { Settings } from '../../../electron/main/entities/Settings'
+import studyConfig from '../../../shared/study.config'
 
 const isEnabled = ref(true)
 const isEnabledTaskbar = ref(true)
 const isEnabledAirbarTimeTracking = ref(true)
+const enabledTaskBarByResearcher = ref(studyConfig.trackers.taskTracker?.enabledTaskbar)
 
 onMounted(async () => {
   try {
@@ -69,7 +71,7 @@ const onChangeAirbarTimeTrackingEnabled = async (e: Event) => {
 
     <Switch :modelValue="isEnabled" :label="'Enable/disable AIRbar'" :on-change="onChangeAirbarEnabled" />
 
-    <template v-if="isEnabled">
+    <template v-if="isEnabled && enabledTaskBarByResearcher">
       <div class="container">
         <Switch :modelValue="isEnabledTaskbar" :label="'Enable/disable taskbar'"
           :on-change="onChangeAirbarTaskbarEnabled" />
