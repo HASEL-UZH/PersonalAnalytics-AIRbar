@@ -24,6 +24,12 @@ defineProps({
           </td>
         </tr>
         <tr>
+          <td class="w-40">License:</td>
+          <td>
+            <span class="license-badge">Research Preview License</span>
+          </td>
+        </tr>
+        <tr>
           <td>Contact:</td>
           <td>{{ studyInfo.contactName }} (<a :href="'mailto:' + studyInfo.contactEmail" target="_blank">{{ studyInfo.contactEmail }}</a>)</td>
         </tr>
@@ -50,5 +56,9 @@ defineProps({
 .subject-badge {
   @apply badge badge-neutral text-white;
   background-color: @primary-color;
+}
+.license-badge {
+  @apply badge badge-neutral text-white;
+  background-color: #666;
 }
 </style>
