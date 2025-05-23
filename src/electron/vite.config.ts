@@ -5,7 +5,6 @@ import vue from '@vitejs/plugin-vue';
 import electron from 'vite-plugin-electron/simple';
 import alias from '@rollup/plugin-alias' // ***AIRBAR 
 import pkg from './package.json';
-import fse from 'fs-extra'; // ***AIRBAR 
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => {

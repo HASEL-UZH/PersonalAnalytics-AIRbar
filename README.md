@@ -6,7 +6,7 @@
 1. Do not edit this fork unless you work at the intersection of Airbar and PersonalAnalytics, use the [upstream repository](https://github.com/HASEL-UZH/PersonalAnalytics) instead.
 2. Maintainers of this fork should sync changes of the upstream repository regularly.
 3. Any deviations from the upstream repository are marked with: `***AIRBAR` in the code.
-4. Exceptions to this rule are added npm packages `@rollup/plugin-alias` and `fs-extra`.
+4. Exceptions to this rule is the added npm package `@rollup/plugin-alias`.
 
 ---
 
