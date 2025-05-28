@@ -65,7 +65,10 @@ const onChangeAirbarTimeTrackingEnabled = async (e: Event) => {
         <span class="primary-blue">AIRbar Settings</span>
       </h1>
       <span>
-        Customize your AIRbar experience.
+        AIRbar is a task management tool designed to enhance Awareness, Intention and Retrospection (AIR). It let's you
+        define up to three key tasks or goals to commit to each workday. Using AIRbar was shown to boost task
+        completion, sharpen focus and reduce multi-tasking. Learn more about the <a href="https://hasel.dev/airbar"
+          target="_blank">tool and science</a> behind it.
       </span>
     </article>
 
@@ -73,9 +76,9 @@ const onChangeAirbarTimeTrackingEnabled = async (e: Event) => {
 
     <template v-if="isEnabled && enabledTaskBarByResearcher">
       <div class="container">
-        <Switch :modelValue="isEnabledTaskbar" :label="'Enable/disable taskbar'"
+        <Switch :modelValue="isEnabledTaskbar" :label="'Enable/disable Taskbar'"
           :on-change="onChangeAirbarTaskbarEnabled" />
-        <span class="italic">Enable or disable the always-on-top taskbar window.</span>
+        <span class="italic">Enable or disable the always-on-top Taskbar window.</span>
         <Switch :modelValue="isEnabledAirbarTimeTracking" :label="'Enable/disable time tracking'"
           :on-change="onChangeAirbarTimeTrackingEnabled" />
         <span class="italic">Enable or disable time tracking for tasks.</span>
