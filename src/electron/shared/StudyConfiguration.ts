@@ -13,6 +13,8 @@ export interface WindowActivityTrackerConfiguration {
 // ***AIRBAR - START
 export interface TaskTrackerConfiguration {
   enabled: boolean
+  enabledTaskbar: boolean
+  enabledRetrospection: boolean
 }
 // ***AIRBAR - END
 
