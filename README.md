@@ -1,5 +1,14 @@
 # PersonalAnalytics - Privacy-protecting, open-source Self-Monitoring Software
-<!--# PersonalAnalytics - Building the Fitbit for Knowledge Workers-->
+
+---
+
+## 🚨🚨🚨 THIS FORK TRACKS CONNECTORS TO AIRBAR
+1. Do not edit this fork unless you work at the intersection of Airbar and PersonalAnalytics, use the [upstream repository](https://github.com/HASEL-UZH/PersonalAnalytics) instead.
+2. Maintainers of this fork should sync changes of the upstream repository regularly.
+3. Any deviations from the upstream repository are marked with: `***AIRBAR` in the code.
+4. Exceptions to this rule are added npm packages `@rollup/plugin-alias` and `fs-extra`.
+
+---
 
 ---
 
@@ -24,6 +33,8 @@ Anyone may install PersonalAnalytics on their Windows or macOS device to non-int
 Learn more about how to [install and use PersonalAnalytics](./documentation/INSTALLATION.md).
 
 ## 👩‍🔬 Customization & Usage as a Researcher
+[![Build and Publish PersonalAnalytics](https://github.com/HASEL-UZH/PersonalAnalytics/actions/workflows/build.yml/badge.svg)](https://github.com/HASEL-UZH/PersonalAnalytics/actions/workflows/build.yml)
+
 This project was created by and for researchers who want to ask study participants to run PersonalAnalytics on their device to non-intrusively collect **computer interaction data** in a privacy-protected way. As often times, having access to only automatically collected data is often not sufficient, PersonalAnalytics also offers an **experience sampling component**, which allows researchers to ask users to reflect and self-report on one or several questions (e.g. Have I been productive? Am I stressed right now?) at customizable times and using Likert-scales. As all collected data is only stored locally on participants' computers, there is an **export component**, guiding the participant through sharing and potentially obfuscating the captured data, before sharing it with the researchers through their data transfer service of choice. Most settings are configurable in the [study-config]([url](https://github.com/HASEL-UZH/PersonalAnalytics/blob/feature/electron/src/electron/shared/study.config.ts)), everything else can be customized in code.
 
 Learn more about how to use [PersonalAnalytics for your research project](./documentation/RESEARCH.md).

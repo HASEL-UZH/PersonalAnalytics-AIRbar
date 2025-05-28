@@ -58,8 +58,8 @@ export class IpcHandler {
       openCollectedData: this.openCollected,
       getWorkHours: this.getWorkHours,
       setWorkHours: this.setWorkHours,
-      setWorkHoursEnabled: this.setWorkHoursEnabled,
-      getWorkHoursEnabled: this.getWorkHoursEnabled,
+      setSettingsProp: this.setSettingsProp,
+      getSettings: this.getSettings,
       createExperienceSample: this.createExperienceSample,
       closeExperienceSamplingWindow: this.closeExperienceSamplingWindow,
       closeOnboardingWindow: this.closeOnboardingWindow,
@@ -79,6 +79,14 @@ export class IpcHandler {
 
     // ***AIRBAR - START
     if (studyConfig.trackers.taskTracker?.enabled) {
+      // we'll misuse this location here to initialze the settings of the airbar
+      const { setSettings } = await import('@external/main/settings/ResearcherSettings');
+      setSettings(
+        studyConfig.trackers.taskTracker.enabledTaskbar,
+        studyConfig.trackers.taskTracker.enabledRetrospection
+      )
+      
+      // initialize the additional ipc handlers used for the airbar frontend
       const { actions } = await import('@external/main/ipc/IpcHandler'); 
       Object.keys(actions).forEach((action: string) => {
         this.actions[action] = actions[action];
@@ -147,15 +155,39 @@ export class IpcHandler {
     await this.workScheduleService.setWorkSchedule(schedule);
   }
 
-  private async setWorkHoursEnabled(enabled: boolean): Promise<void> {
+  private async setSettingsProp(prop: string, value: any): Promise<void> {
     const settings: Settings = await Settings.findOne({ where: { onlyOneEntityShouldExist: 1 } });
-    settings.enabledWorkHours = enabled;
+    settings[prop] = value;
     await settings.save();
+
+    // ***AIRBAR - START
+    const { closePlanningWindow, 
+      closeTaskBarWindow, 
+      createPlanningOrTaskbarWindow,
+      reloadTaskBarWindowIfOpen } = await import('@external/main/services/WindowService')
+    if (prop === 'enabledAirbar' && !value) {
+      await closePlanningWindow()
+      await closeTaskBarWindow()
+    } else {
+      await createPlanningOrTaskbarWindow()
+    }
+
+    if (prop === 'enabledAirbarTaskbar' && !value) {
+      await closePlanningWindow()
+    }
+
+    if (prop === 'enableAirbarTaskbarTimeTracking') {
+      reloadTaskBarWindowIfOpen()
+    }
+    // ***AIRBAR - END
   }
 
-  private async getWorkHoursEnabled(): Promise<boolean> {
+  private async getSettings(): Promise<Settings> {
     const settings: Settings = await Settings.findOne({ where: { onlyOneEntityShouldExist: 1 } });
-    return settings.enabledWorkHours;
+    if (!settings) {
+      throw new Error('Settings not found');
+    }
+    return settings;
   }
 
   private async getStudyInfo(): Promise<StudyInfoDto> {

@@ -1,8 +1,8 @@
 /** @type {import('tailwindcss').Config} */
-import colors from 'tailwindcss/colors';
+import colors from 'tailwindcss/colors'
 
 module.exports = {
-  content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}', './external/dyn/**/*.{vue,js,ts,jsx,tsx}'], // ***AIRBAR - added "./external/dyn/..." part
+  content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}', './PA.SelfReflection/src/**/*.{vue,js,ts,jsx,tsx}'], // ***AIRBAR - added PA.SelfReflection
   plugins: [require('@tailwindcss/typography'), require('daisyui')],
   theme: {
     extend: {
@@ -19,4 +19,4 @@ module.exports = {
       variants: ['active', 'focus']
     }
   ]
-};
+}

@@ -47,6 +47,13 @@ const router: Router = createRouter({
           name: 'About',
           component: () => import('../views/settings/AboutView.vue')
         },
+        // ***AIRBAR - START
+        {
+          path: '/airbar',
+          name: 'Airbar',
+          component: () => import('../views/settings/AirbarView.vue')
+        },
+        // ***AIRBAR - END
         {
           path: '/work-hours',
           name: 'Active Times',

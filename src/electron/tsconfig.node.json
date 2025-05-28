@@ -7,9 +7,6 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "baseUrl": ".",
-    "paths": {
-      "@external/*": ["external/dyn/*"]
-    }
   },
   "include": ["vite.config.ts", "package.json", "electron", "external/dyn/**/*"]
 }

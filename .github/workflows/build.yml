@@ -1,4 +1,4 @@
-name: Build and Publish PersonalAnalytics
+name: Build and Publish PersonalAnalytics-AIRbar # ***AIRbar
 on:
   push:
     branches:
@@ -25,7 +25,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          submodules: true
+          submodules: true    
+          token: ${{ secrets.GH_TOKEN }} # needed for private ***AIRbar repo
       - name: Setup Node
         uses: actions/setup-node@master
         with:

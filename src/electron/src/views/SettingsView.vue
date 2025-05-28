@@ -2,7 +2,8 @@
 
 import studyConfig from '../../shared/study.config'
 
-const considerWorkHours = studyConfig.trackers.experienceSamplingTracker.enabledWorkHours;
+const considerWorkHours = studyConfig.trackers.experienceSamplingTracker.enabledWorkHours
+const enabledAirbar = studyConfig.trackers.taskTracker?.enabled;
 
 </script>
 
@@ -13,7 +14,9 @@ const considerWorkHours = studyConfig.trackers.experienceSamplingTracker.enabled
       <ul>
         <li><router-link to="about">About</router-link></li>
         <li v-if="considerWorkHours"><router-link to="work-hours">Active Times</router-link></li>
-        <!-- <li><router-link to="config">App Configuration</router-link></li> -->
+        <!-- ***AIRBAR - START -->
+        <li v-if="enabledAirbar"><router-link to="airbar">AIRbar</router-link></li>
+        <!-- ***AIRBAR - END -->
       </ul>
     </nav>
     <div class="content">
