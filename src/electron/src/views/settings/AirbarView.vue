@@ -10,7 +10,9 @@ import studyConfig from '../../../shared/study.config'
 const isEnabled = ref(true)
 const isEnabledTaskbar = ref(true)
 const isEnabledAirbarTimeTracking = ref(true)
+const isEnabledAirbarRetrospection = ref(true)
 const enabledTaskBarByResearcher = ref(studyConfig.trackers.taskTracker?.enabledTaskbar)
+const enabledRetrospectionByResearcher = ref(studyConfig.trackers.taskTracker?.enabledRetrospection)
 
 onMounted(async () => {
   try {
@@ -18,6 +20,7 @@ onMounted(async () => {
     isEnabled.value = settings.enabledAirbar
     isEnabledTaskbar.value = settings.enabledAirbarTaskbar
     isEnabledAirbarTimeTracking.value = settings.enableAirbarTimeTracking
+    isEnabledAirbarRetrospection.value = settings.enabledAirbarRetrospection
   } catch (error) {
     console.error('Error getting settings:', error)
   }
@@ -56,6 +59,17 @@ const onChangeAirbarTimeTrackingEnabled = async (e: Event) => {
   }
 }
 
+const onChangeAirbarRetrospectionEnabled = async (e: Event) => {
+  const isChecked = (e.target as HTMLInputElement).checked
+  isEnabledAirbarRetrospection.value = isChecked
+
+  try {
+    await typedIpcRenderer.invoke('setSettingsProp', 'enabledAirbarRetrospection', isChecked)
+  } catch (error) {
+    console.error('Error setting AIRbar retrospection enabled:', error)
+  }
+}
+
 </script>
 
 <template>
@@ -79,6 +93,11 @@ const onChangeAirbarTimeTrackingEnabled = async (e: Event) => {
         <Switch :modelValue="isEnabledTaskbar" :label="'Enable/disable Taskbar'"
           :on-change="onChangeAirbarTaskbarEnabled" />
         <span class="italic">Enable or disable the always-on-top Taskbar window.</span>
+        <template v-if="enabledRetrospectionByResearcher">
+          <Switch :modelValue="isEnabledAirbarRetrospection" :label="'Enable/disable Retrospection'"
+            :on-change="onChangeAirbarRetrospectionEnabled" />
+          <span class="italic">Enable or disable AIRbar Evening Retrospection.</span>
+        </template>
         <Switch :modelValue="isEnabledAirbarTimeTracking" :label="'Enable/disable time tracking'"
           :on-change="onChangeAirbarTimeTrackingEnabled" />
         <span class="italic">Enable or disable time tracking for tasks.</span>
