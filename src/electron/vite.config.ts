@@ -9,9 +9,9 @@ import pkg from './package.json';
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => {
   fs.rmSync('dist-electron', { recursive: true, force: true });
-
+ 
   const selfReflectionDir = path.resolve(__dirname, 'PA.SelfReflection/src'); // ***AIRBAR
-
+       
   const isServe = command === 'serve';
   const isBuild = command === 'build';
   const sourcemap = isServe || !!process.env.VSCODE_DEBUG;
@@ -21,7 +21,7 @@ export default defineConfig(({ command }) => {
       // ***AIRBAR - START
       // this works for the renderer files, but does not work for the main files
       alias({
-        entries: [ { find: '@externalVue', replacement: selfReflectionDir } ]
+        entries: [ { find: '@externalVue', replacement: selfReflectionDir} ]
       }),
       // ***AIRBAR - END
       vue(),
@@ -36,10 +36,10 @@ export default defineConfig(({ command }) => {
               outDir: 'dist-electron/main',
               rollupOptions: {
                 // ***AIRBAR - START
-                plugins: 
+                plugins:  
                   // for the main files...
                   alias({
-                    entries: [ { find: '@external', replacement: selfReflectionDir} ]
+                    entries: [ { find: '@external', replacement: selfReflectionDir } ]
                 }),
                 // ***AIRBAR - END
                 
