@@ -4,7 +4,7 @@ import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import electron from 'vite-plugin-electron/simple';
 import alias from '@rollup/plugin-alias'; // ***AIRBAR 
-import pkg from './package.json'
+import pkg from './package.json';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => {
@@ -14,7 +14,7 @@ export default defineConfig(({ command }) => {
 
   const isServe = command === 'serve';
   const isBuild = command === 'build';
-  const sourcemap = isServe || !!process.env.VSCODE_DEBUG;  
+  const sourcemap = isServe || !!process.env.VSCODE_DEBUG;
 
   return {
     plugins: [
@@ -39,8 +39,8 @@ export default defineConfig(({ command }) => {
                 plugins: 
                   // for the main files...
                   alias({
-                    entries: [ { find: '@external', replacement: selfReflectionDir } ]
-                  }),
+                    entries: [ { find: '@external', replacement: selfReflectionDir} ]
+                }),
                 // ***AIRBAR - END
                 
                 // Some third-party Node.js libraries may not be built correctly by Vite, especially `C/C++` addons,
