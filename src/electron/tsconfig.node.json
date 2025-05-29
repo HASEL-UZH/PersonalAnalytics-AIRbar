@@ -8,5 +8,5 @@
     "experimentalDecorators": true,
     "baseUrl": ".",
   },
-  "include": ["vite.config.ts", "package.json", "electron", "external/dyn/**/*"]
+  "include": ["vite.config.ts", "package.json", "electron"]
 }
