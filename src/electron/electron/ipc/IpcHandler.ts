@@ -184,6 +184,8 @@ export class IpcHandler {
     if (prop === 'enableAirbarTimeTracking') {
       reloadTaskBarWindowIfOpen()
     }
+
+    this.windowService.updateTray();
     // ***AIRBAR - END
   }
 

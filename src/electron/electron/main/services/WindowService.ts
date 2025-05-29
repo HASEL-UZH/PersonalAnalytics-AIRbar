@@ -385,33 +385,34 @@ export class WindowService {
       },
       // ***AIRBAR - START
       {
-        label: 'Open Task Planning',
+        label: 'AIRbar',
         visible: !!studyConfig.trackers.taskTracker?.enabled && settings.enabledAirbar,
-        click: async () => {
-          const { createPlanningViewWindow } = await import('@external/main/services/WindowService')
-          createPlanningViewWindow(true)
-        }
+        submenu: [
+          {
+            label: 'Edit Tasks',
+            click: async () => {
+              const { createPlanningViewWindow } = await import('@external/main/services/WindowService')
+              createPlanningViewWindow(true)
+            }
+          },
+          {
+            label: 'Retrospection',
+            visible: !!studyConfig.trackers.taskTracker?.enabledRetrospection && settings.enabledAirbarRetrospection,
+            click: async () => {
+              const { createRetrospectionWindow } = await import('@external/main/services/WindowService')
+              createRetrospectionWindow()
+            }
+          },
+          {
+            label: 'Show/Hide Taskbar',
+            visible: !!studyConfig.trackers.taskTracker?.enabledTaskbar && settings.enabledAirbarTaskbar,
+            click: async () => {
+              const { toggleTaskBarWindow } = await import('@external/main/services/WindowService')
+              toggleTaskBarWindow()
+            }
+          }
+        ]
       },
-      {
-        label: 'Open Retrospection', // OTODO: should automatically update when user changes settings
-        visible: !!studyConfig.trackers.taskTracker?.enabled && !!studyConfig.trackers.taskTracker?.enabledRetrospection && settings.enabledAirbarRetrospection && settings.enabledAirbar,
-        click: async () => {
-          const { createRetrospectionWindow } = await import('@external/main/services/WindowService')
-          createRetrospectionWindow()
-        }
-      },
-      // {
-      //   label: 'Open Taskbar',
-      //   visible:
-      //     !!studyConfig.trackers.taskTracker?.enabled
-      //     && !!studyConfig.trackers.taskTracker?.enabledTaskbar
-      //     && settings.enabledAirbarTaskbar
-      //     && settings.enabledAirbar,
-      //   click: async () => {
-      //     const { createTaskBarWindow } = await import('@external/main/services/WindowService')
-      //     createTaskBarWindow()
-      //   }
-      // },
       // ***AIRBAR - END
       {
         label: 'Open Settings',
