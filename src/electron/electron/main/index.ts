@@ -160,6 +160,12 @@ app.whenReady().then(async () => {
 
       powerMonitor.on('suspend', async (): Promise<void> => {
         LOG.debug('The system is going to sleep');
+        // ***AIRBAR - START
+        if (studyConfig.trackers.taskTracker?.enabled) {
+          const { stopCurrentTaskAndTaskActivity } = await import('@external/main/services/TaskService');
+          await stopCurrentTaskAndTaskActivity();
+        }
+        // ***AIRBAR - END
         await Promise.all([
           trackers.stopAllTrackers(),
           UsageDataService.createNewUsageDataEvent(UsageDataEventType.SystemSuspend)
@@ -167,6 +173,13 @@ app.whenReady().then(async () => {
       });
       powerMonitor.on('resume', async (): Promise<void> => {
         LOG.debug('The system is resuming');
+        // ***AIRBAR - START
+        if (studyConfig.trackers.taskTracker?.enabled) {
+          const { taskWidgetRemindToTrackTime, reloadTaskBarWindowIfOpen } = await import('@external/main/services/WindowService');
+          await taskWidgetRemindToTrackTime('SYSTEM_RESUME');
+          await reloadTaskBarWindowIfOpen();
+        }
+        // ***AIRBAR - END
         await Promise.all([
           trackers.resumeAllTrackers(),
           UsageDataService.createNewUsageDataEvent(UsageDataEventType.SystemResume)
@@ -174,6 +187,12 @@ app.whenReady().then(async () => {
       });
       powerMonitor.on('shutdown', async (): Promise<void> => {
         LOG.debug('The system is going to shutdown');
+        // ***AIRBAR - START
+        if (studyConfig.trackers.taskTracker?.enabled) {
+          const { stopCurrentTaskAndTaskActivity } = await import('@external/main/services/TaskService');
+          await stopCurrentTaskAndTaskActivity();
+        }
+        // ***AIRBAR - END
         await Promise.all([
           trackers.stopAllTrackers(),
           UsageDataService.createNewUsageDataEvent(UsageDataEventType.SystemShutdown)
@@ -181,6 +200,13 @@ app.whenReady().then(async () => {
       });
       powerMonitor.on('lock-screen', async (): Promise<void> => {
         LOG.debug('The system is going to lock-screen');
+        // ***AIRBAR - START
+        if (studyConfig.trackers.taskTracker?.enabled) {
+          const { stopCurrentTaskAndTaskActivity } = await import('@external/main/services/TaskService');
+          console.log('Stopping current task and task activity due to system lock');
+          await stopCurrentTaskAndTaskActivity();
+        }
+        // ***AIRBAR - END
         await Promise.all([
           trackers.stopAllTrackers(),
           UsageDataService.createNewUsageDataEvent(UsageDataEventType.SystemLockScreen)
@@ -188,6 +214,13 @@ app.whenReady().then(async () => {
       });
       powerMonitor.on('unlock-screen', async (): Promise<void> => {
         LOG.debug('The system is going to unlock-screen');
+        // ***AIRBAR - START
+        if (studyConfig.trackers.taskTracker?.enabled) {
+          const { taskWidgetRemindToTrackTime, reloadTaskBarWindowIfOpen } = await import('@external/main/services/WindowService');
+          await taskWidgetRemindToTrackTime('SYSTEM_RESUME');
+          await reloadTaskBarWindowIfOpen();
+        }
+        // ***AIRBAR - END
         await Promise.all([
           trackers.resumeAllTrackers(),
           UsageDataService.createNewUsageDataEvent(UsageDataEventType.SystemUnlockScreen)

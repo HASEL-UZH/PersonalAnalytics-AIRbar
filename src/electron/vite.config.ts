@@ -3,15 +3,14 @@ import path from 'node:path'; // ***AIRBAR
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import electron from 'vite-plugin-electron/simple';
-import alias from '@rollup/plugin-alias' // ***AIRBAR 
+import alias from '@rollup/plugin-alias'; // ***AIRBAR 
 import pkg from './package.json';
-import fse from 'fs-extra'; // ***AIRBAR 
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => {
   fs.rmSync('dist-electron', { recursive: true, force: true });
  
-  const selfReflectionDir = path.resolve(__dirname, 'PA.SelfReflection/src') // ***AIRBAR
+  const selfReflectionDir = path.resolve(__dirname, 'PA.SelfReflection/src'); // ***AIRBAR
        
   const isServe = command === 'serve';
   const isBuild = command === 'build';

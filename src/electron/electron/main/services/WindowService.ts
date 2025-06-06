@@ -385,12 +385,33 @@ export class WindowService {
       },
       // ***AIRBAR - START
       {
-        label: 'Open Task Planning',
-        visible: !!studyConfig.trackers.taskTracker?.enabled,
-        click: async () => {
-          const { createPlanningViewWindow } = await import('@external/main/services/WindowService')
-          createPlanningViewWindow(true)
-        }
+        label: 'AIRbar',
+        visible: !!studyConfig.trackers.taskTracker?.enabled && settings.enabledAirbar,
+        submenu: [
+          {
+            label: 'Edit Tasks',
+            click: async () => {
+              const { createPlanningViewWindow } = await import('@external/main/services/WindowService')
+              createPlanningViewWindow(true)
+            }
+          },
+          {
+            label: 'Retrospection',
+            visible: !!studyConfig.trackers.taskTracker?.enabledRetrospection && settings.enabledAirbarRetrospection,
+            click: async () => {
+              const { createRetrospectionWindow } = await import('@external/main/services/WindowService')
+              createRetrospectionWindow()
+            }
+          },
+          {
+            label: 'Show/Hide Taskbar',
+            visible: !!studyConfig.trackers.taskTracker?.enabledTaskbar && settings.enabledAirbarTaskbar,
+            click: async () => {
+              const { toggleTaskBarWindow } = await import('@external/main/services/WindowService')
+              toggleTaskBarWindow()
+            }
+          }
+        ]
       },
       // ***AIRBAR - END
       {
