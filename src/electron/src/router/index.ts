@@ -19,6 +19,11 @@ const router: Router = createRouter({
       name: 'Taskbar View',
       component: () => import('@externalVue/renderer/views/TaskBarView.vue')
     },
+    {
+      path: '/retrospection',
+      name: 'Retrospection',
+      component: () => import('@externalVue/renderer/views/RetrospectionView.vue')
+    },
     // ***AIRBAR - END
     {
       path: '/onboarding',

@@ -41,8 +41,8 @@ export class Settings extends BaseEntity {
   @Column({ type: 'boolean', nullable: false, default: true })
   enableAirbarTimeTracking: boolean;
 
-  @Column({ type: 'boolean', nullable: false, default: false })
-  enableAirbarTaskbarTimeTracking: boolean;
+  @Column({ type: 'boolean', nullable: false, default: true })
+  enabledAirbarRetrospection: boolean;
   // ***AIRBAR - END
 
   @Column({ type: 'boolean', nullable: false, default: false })

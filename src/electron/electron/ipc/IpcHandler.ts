@@ -163,6 +163,7 @@ export class IpcHandler {
     // ***AIRBAR - START
     const { closePlanningWindow, 
       closeTaskBarWindow, 
+      closeRetrospectionWindow,
       createPlanningOrTaskbarWindow,
       reloadTaskBarWindowIfOpen } = await import('@external/main/services/WindowService')
     if (prop === 'enabledAirbar' && !value) {
@@ -176,9 +177,15 @@ export class IpcHandler {
       await closePlanningWindow()
     }
 
-    if (prop === 'enableAirbarTaskbarTimeTracking') {
+    if (prop === 'enabledAirbarRetrospection' && !value) {
+      await closeRetrospectionWindow()
+    }
+
+    if (prop === 'enableAirbarTimeTracking') {
       reloadTaskBarWindowIfOpen()
     }
+
+    this.windowService.updateTray();
     // ***AIRBAR - END
   }
 
