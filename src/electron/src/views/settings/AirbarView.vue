@@ -4,7 +4,7 @@
 import { onMounted, ref } from 'vue'
 import typedIpcRenderer from '../../utils/typedIpcRenderer'
 import Switch from '../../components/Switch.vue'
-import { Settings } from '../../../electron/main/entities/Settings'
+import StudyInfoDto from '../../../shared/dto/StudyInfoDto'
 import studyConfig from '../../../shared/study.config'
 
 const isEnabled = ref(true)
@@ -16,7 +16,7 @@ const enabledRetrospectionByResearcher = ref(studyConfig.trackers.taskTracker?.e
 
 onMounted(async () => {
   try {
-    const settings = await typedIpcRenderer.invoke('getSettings') as Settings
+    const settings = await typedIpcRenderer.invoke('getSettings') as StudyInfoDto
     isEnabled.value = settings.enabledAirbar
     isEnabledTaskbar.value = settings.enabledAirbarTaskbar
     isEnabledAirbarTimeTracking.value = settings.enableAirbarTimeTracking
