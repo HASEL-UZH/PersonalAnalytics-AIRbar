@@ -175,9 +175,9 @@ app.whenReady().then(async () => {
         LOG.debug('The system is resuming');
         // ***AIRBAR - START
         if (studyConfig.trackers.taskTracker?.enabled) {
-          const { taskWidgetRemindToTrackTime, reloadTaskBarWindowIfOpen } = await import('@external/main/services/WindowService');
+          const { taskWidgetRemindToTrackTime, sendRefreshTaskbarTasks } = await import('@external/main/services/WindowService');
           await taskWidgetRemindToTrackTime('SYSTEM_RESUME');
-          await reloadTaskBarWindowIfOpen();
+          await sendRefreshTaskbarTasks();
         }
         // ***AIRBAR - END
         await Promise.all([
@@ -216,9 +216,9 @@ app.whenReady().then(async () => {
         LOG.debug('The system is going to unlock-screen');
         // ***AIRBAR - START
         if (studyConfig.trackers.taskTracker?.enabled) {
-          const { taskWidgetRemindToTrackTime, reloadTaskBarWindowIfOpen } = await import('@external/main/services/WindowService');
+          const { taskWidgetRemindToTrackTime, sendRefreshTaskbarTasks } = await import('@external/main/services/WindowService');
           await taskWidgetRemindToTrackTime('SYSTEM_RESUME');
-          await reloadTaskBarWindowIfOpen();
+          await sendRefreshTaskbarTasks();
         }
         // ***AIRBAR - END
         await Promise.all([
