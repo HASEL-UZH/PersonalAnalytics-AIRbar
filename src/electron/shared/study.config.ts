@@ -12,7 +12,7 @@ const studyConfig: StudyConfiguration = {
   subjectIdLength: 6,
   dataExportEnabled: true,
   dataExportEncrypted: false,
-  displayDaysParticipated: true,
+  displayDaysParticipated: false,
   trackers: {
     // ***AIRBAR - START
     taskTracker: {
