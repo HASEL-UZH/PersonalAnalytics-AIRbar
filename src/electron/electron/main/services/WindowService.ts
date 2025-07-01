@@ -368,10 +368,12 @@ export class WindowService {
       {
         label: `Subject ID: ${settings.subjectId}`,
         enabled: false,
+        visible: false
       },
       {
         label: 'Copy Subject Id',
-        click: () => clipboard.writeText(settings.subjectId)
+        click: () => clipboard.writeText(settings.subjectId),
+        visible: false
       },
       {
         label: `Days participated: ${settings.daysParticipated}`,
@@ -380,7 +382,7 @@ export class WindowService {
       },
       { type: 'separator' },
       {
-        label: 'Open Experience Sampling',
+        label: 'Add Self-Report',
         click: () => this.createExperienceSamplingWindow(true)
       },
       // ***AIRBAR - START
@@ -415,7 +417,7 @@ export class WindowService {
       },
       // ***AIRBAR - END
       {
-        label: 'Open Settings',
+        label: 'Settings',
         click: () => this.createSettingsWindow()
       },
       {
@@ -424,7 +426,7 @@ export class WindowService {
         visible: is.dev
       },
       {
-        label: 'Open Study Data Export',
+        label: 'Create Study Data Export',
         click: (): void => {
           LOG.info(`Opening data export`)
           this.createDataExportWindow()
