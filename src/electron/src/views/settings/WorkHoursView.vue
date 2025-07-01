@@ -24,7 +24,6 @@ onMounted(async () => {
   try {
     const workHours = await typedIpcRenderer.invoke('getWorkHours') as WorkHoursDto
     workHoursRef.value = { ...workHours }
-
     const settings = await typedIpcRenderer.invoke('getSettings') as StudyInfoDto;
     isEnabled.value = settings.enabledWorkHours;
   } catch (error) {
