@@ -90,17 +90,24 @@ const onChangeAirbarRetrospectionEnabled = async (e: Event) => {
 
     <template v-if="isEnabled && enabledTaskBarByResearcher">
       <div class="container">
-        <Switch :modelValue="isEnabledTaskbar" :label="'Enable/disable Taskbar'"
-          :on-change="onChangeAirbarTaskbarEnabled" />
-        <span class="italic">Enable or disable the always-on-top Taskbar window.</span>
+        <div class="mt-8">
+          <Switch :modelValue="isEnabledTaskbar" :label="'Enable/disable Taskbar'"
+            :on-change="onChangeAirbarTaskbarEnabled" />
+          <span class="italic">Enable or disable the always-on-top Taskbar window.</span>
+        </div>
+
         <template v-if="enabledRetrospectionByResearcher">
-          <Switch :modelValue="isEnabledAirbarRetrospection" :label="'Enable/disable Retrospection'"
-            :on-change="onChangeAirbarRetrospectionEnabled" />
-          <span class="italic">Enable or disable AIRbar Evening Retrospection.</span>
+          <div class="mt-8">
+            <Switch :modelValue="isEnabledAirbarRetrospection" :label="'Enable/disable Retrospection'"
+              :on-change="onChangeAirbarRetrospectionEnabled" />
+            <span class="italic">Enable or disable AIRbar Evening Retrospection.</span>
+          </div>
         </template>
-        <Switch :modelValue="isEnabledAirbarTimeTracking" :label="'Enable/disable time tracking'"
-          :on-change="onChangeAirbarTimeTrackingEnabled" />
-        <span class="italic">Enable or disable time tracking for tasks.</span>
+        <div class="mt-8">
+          <Switch :modelValue="isEnabledAirbarTimeTracking" :label="'Enable/disable time tracking'"
+            :on-change="onChangeAirbarTimeTrackingEnabled" />
+          <span class="italic">Enable or disable time tracking for tasks.</span>
+        </div>
       </div>
     </template>
 
@@ -118,14 +125,6 @@ const onChangeAirbarRetrospectionEnabled = async (e: Event) => {
   width: 70%;
   border-top: 1px solid rgb(59 130 246 / 0.5);
   margin-top: 40px;
-}
-
-.switch-container {
-  padding-top: 40px;
-}
-
-.italic {
-  font-style: italic;
 }
 </style>
 <!-- ***AIRBAR - END -->
