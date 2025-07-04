@@ -79,7 +79,7 @@ const onChangeAirbarRetrospectionEnabled = async (e: Event) => {
         <span class="primary-blue">AIRbar Settings</span>
       </h1>
       <span>
-        AIRbar is a task management tool designed to enhance Awareness, Intention and Retrospection (AIR). It let's you
+        AIRbar is a task management tool designed to enhance Awareness, Intention and Retrospection (AIR). It lets you
         define up to three key tasks or goals to commit to each workday. Using AIRbar was shown to boost task
         completion, sharpen focus and reduce multi-tasking. Learn more about the <a href="https://hasel.dev/airbar"
           target="_blank">tool and science</a> behind it.
