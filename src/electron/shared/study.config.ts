@@ -8,7 +8,7 @@ const studyConfig: StudyConfiguration = {
   privacyPolicyUrl: 'https://github.com/HASEL-UZH/PersonalAnalytics/blob/dev/documentation/PRIVACY.md',
   uploadUrl: 'https://hasel.dev/upload',
   contactName: 'Dr. André Meyer',
-  contactEmail: 'study@hasel.dev',
+  contactEmail: 'airbar@hasel.dev',
   subjectIdLength: 6,
   dataExportEnabled: true,
   dataExportEncrypted: false,
