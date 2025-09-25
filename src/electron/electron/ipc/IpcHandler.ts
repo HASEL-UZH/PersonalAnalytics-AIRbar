@@ -181,7 +181,7 @@ export class IpcHandler {
       await closeRetrospectionWindow()
     }
 
-    if (prop === 'enableAirbarTimeTracking') {
+    if (prop === 'enabledAirbarTimeTracking') {
       reloadTaskBarWindowIfOpen()
     }
 

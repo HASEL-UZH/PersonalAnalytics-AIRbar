@@ -12,7 +12,8 @@ export default interface StudyInfoDto {
   // ***AIRBAR - START
   enabledAirbar: boolean;
   enabledAirbarTaskbar: boolean;
-  enableAirbarTimeTracking: boolean;
+  enabledAirbarTaskPlanning: boolean;
+  enabledAirbarTimeTracking: boolean;
   enabledAirbarRetrospection: boolean;
   // ***AIRBAR - END
 }
