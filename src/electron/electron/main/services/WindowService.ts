@@ -399,7 +399,7 @@ export class WindowService {
           },
           {
             label: 'Retrospection',
-            visible: !!studyConfig.trackers.taskTracker?.enabledRetrospection && settings.enabledAirbarRetrospection,
+            visible: !!studyConfig.trackers.taskTracker?.enabledRetrospection,
             click: async () => {
               const { createRetrospectionWindow } = await import('@external/main/services/WindowService')
               createRetrospectionWindow()
@@ -407,7 +407,7 @@ export class WindowService {
           },
           {
             label: 'Show/Hide Taskbar',
-            visible: !!studyConfig.trackers.taskTracker?.enabledTaskbar && settings.enabledAirbarTaskbar,
+            visible: !!studyConfig.trackers.taskTracker?.enabledTaskbar,
             click: async () => {
               const { toggleTaskBarWindow } = await import('@external/main/services/WindowService')
               toggleTaskBarWindow()
