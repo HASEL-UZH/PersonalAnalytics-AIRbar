@@ -166,11 +166,13 @@ export class IpcHandler {
       closeRetrospectionWindow,
       createPlanningOrTaskbarWindow,
       reloadTaskBarWindowIfOpen } = await import('@external/main/services/WindowService')
-    if (prop === 'enabledAirbar' && !value) {
-      await closePlanningWindow()
-      await closeTaskBarWindow()
-    } else {
-      await createPlanningOrTaskbarWindow()
+    if (prop === 'enabledAirbar'){
+        if(!value) {
+        await closePlanningWindow()
+        await closeTaskBarWindow()
+      } else  {
+        await createPlanningOrTaskbarWindow()
+      }
     }
 
     if (prop === 'enabledAirbarTaskbar' && !value) {
