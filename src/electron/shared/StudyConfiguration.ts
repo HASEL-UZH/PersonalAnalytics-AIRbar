@@ -1,3 +1,5 @@
+import { DataExportFormat } from './DataExportFormat.enum';
+
 export interface UserInputTrackerConfiguration {
   enabled: boolean
   intervalInMs: number
@@ -41,16 +43,17 @@ export interface TrackerConfiguration {
 }
 
 export interface StudyConfiguration {
-  name: string
-  shortDescription: string
-  infoUrl: string
-  privacyPolicyUrl: string
-  uploadUrl: string
-  contactName: string
-  contactEmail: string
-  subjectIdLength: number
-  dataExportEnabled: boolean
-  dataExportEncrypted: boolean
-  trackers: TrackerConfiguration
-  displayDaysParticipated: boolean
+  name: string;
+  shortDescription: string;
+  infoUrl: string;
+  privacyPolicyUrl: string;
+  uploadUrl: string;
+  contactName: string;
+  contactEmail: string;
+  subjectIdLength: number;
+  dataExportEnabled: boolean;
+  dataExportEncrypted: boolean;
+  dataExportFormat: DataExportFormat;
+  trackers: TrackerConfiguration;
+  displayDaysParticipated: boolean;
 }

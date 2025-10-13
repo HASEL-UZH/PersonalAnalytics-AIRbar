@@ -1,4 +1,5 @@
-import { StudyConfiguration } from './StudyConfiguration'
+import { StudyConfiguration } from './StudyConfiguration';
+import { DataExportFormat } from './DataExportFormat.enum';
 
 const studyConfig: StudyConfiguration = {
   name: 'PersonalAnalytics Study',
@@ -8,9 +9,10 @@ const studyConfig: StudyConfiguration = {
   privacyPolicyUrl: 'https://github.com/HASEL-UZH/PersonalAnalytics/blob/dev/documentation/PRIVACY.md',
   uploadUrl: 'https://hasel.dev/upload',
   contactName: 'Dr. André Meyer',
-  contactEmail: 'study@hasel.dev',
+  contactEmail: 'airbar@hasel.dev',
   subjectIdLength: 6,
   dataExportEnabled: true,
+  dataExportFormat: DataExportFormat.ExportToDDL, // default should be ExportAsZippedSqlite,
   dataExportEncrypted: false,
   displayDaysParticipated: false,
   trackers: {
@@ -29,7 +31,7 @@ const studyConfig: StudyConfiguration = {
     },
     userInputTracker: {
       enabled: true,
-      intervalInMs: 10000
+      intervalInMs: 60000
     },
     experienceSamplingTracker: {
       enabled: true,
