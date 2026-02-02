@@ -189,7 +189,11 @@ export class IpcHandler {
       reloadTaskBarWindowIfOpen()
     }
 
-    this.windowService.updateTray();
+    try {
+      await this.windowService.updateTray();
+    } catch (e) {
+      LOG.warn('Failed to update tray after settings change', e);
+    }
     // ***AIRBAR - END
   }
 

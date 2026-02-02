@@ -32,7 +32,10 @@ export interface ExperienceSamplingTrackerConfiguration {
   // Example: Interval (intervalInMs) is set to 60 minutes, randomization is set to 0.1
   // The experience sampling will be triggered between 54 and 66 minutes
   // After app startup or the last experience sampling
-  samplingRandomization: number
+  samplingRandomization: number;
+  allowUserToDisable?: boolean;
+  allowUserToChangeInterval?: boolean;
+  userDefinedInterval_h?: number[];
 }
 
 export interface TrackerConfiguration {
@@ -56,4 +59,5 @@ export interface StudyConfiguration {
   dataExportFormat: DataExportFormat;
   trackers: TrackerConfiguration;
   displayDaysParticipated: boolean;
+  showActiveTimesInOnboarding?: boolean;
 }

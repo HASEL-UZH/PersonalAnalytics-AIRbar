@@ -357,6 +357,13 @@ export class WindowService {
 
   private async getTrayMenuTemplate(): Promise<MenuItemConstructorOptions[]> {
     const settings: Settings = await Settings.findOne({ where: { onlyOneEntityShouldExist: 1 } })
+
+    const es = studyConfig.trackers.experienceSamplingTracker;
+    const allowDisable = es.allowUserToDisable ?? true;
+    const showSelfReportMenu =
+      es.enabled === true &&
+      (!allowDisable || (settings?.userDisabledExperienceSampling ?? 0) === 0);
+    
     const trayMenuItems: MenuItemConstructorOptions[] = [
       { label: `Version ${app.getVersion()}`, enabled: false },
       {
@@ -382,8 +389,9 @@ export class WindowService {
       },
       // { type: 'separator' },
       {
-        label: 'Add Self-Report',
-        click: () => this.createExperienceSamplingWindow(true)
+        label: 'Add Self-Reflection',
+        click: () => this.createExperienceSamplingWindow(true),
+        visible: showSelfReportMenu
       },
       // ***AIRBAR - START
       {
