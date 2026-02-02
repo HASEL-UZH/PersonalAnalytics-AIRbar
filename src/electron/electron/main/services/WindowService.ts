@@ -380,7 +380,7 @@ export class WindowService {
         enabled: false,
         visible: studyConfig.displayDaysParticipated
       },
-      { type: 'separator' },
+      // { type: 'separator' },
       {
         label: 'Add Self-Report',
         click: () => this.createExperienceSamplingWindow(true)
@@ -391,7 +391,7 @@ export class WindowService {
         visible: !!studyConfig.trackers.taskTracker?.enabled && settings.enabledAirbar,
         submenu: [
           {
-            label: 'Edit Tasks',
+            label: 'Edit/Prioritize Tasks',
             click: async () => {
               const { createPlanningViewWindow } = await import('@external/main/services/WindowService')
               createPlanningViewWindow(true)
