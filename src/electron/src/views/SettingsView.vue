@@ -17,7 +17,7 @@ const showSelfReporting = es.enabled === true;
         <!-- ***AIRBAR - START -->
         <li v-if="enabledAirbar"><router-link to="airbar">AIRbar</router-link></li>
         <!-- ***AIRBAR - END -->
-        <li v-if="showSelfReporting"><router-link to="self-reporting">Self-Reporting</router-link></li>
+        <li v-if="showSelfReporting"><router-link to="self-reporting">Self-Reflection</router-link></li>
       </ul>
     </nav>
     <div class="content">
