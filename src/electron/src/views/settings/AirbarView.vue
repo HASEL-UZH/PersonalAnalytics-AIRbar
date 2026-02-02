@@ -104,17 +104,20 @@ const onChangeAirbarTaskPlanningEnabled = async (e: Event) => {
     <template v-if="isEnabled && enabledTaskBarByResearcher">
       <div class="container">
         <div class="mt-8">
-          <Switch :modelValue="isEnabledTaskbar" :label="'Enable/disable taskbar'"
-            :on-change="onChangeAirbarTaskbarEnabled" />
-          <span class="italic">Enable or disable the always-on-top taskbar window.</span>
-        </div>
-
-        <div class="mt-8">
           <Switch :modelValue="isEnabledAirbarTaskPlanning" :label="'Enable/disable task planning'"
             :on-change="onChangeAirbarTaskPlanningEnabled" />
           <span class="italic">Enable or disable morning task planning popup for AIRbar.</span>
         </div>
-
+        <div class="mt-8">
+          <Switch :modelValue="isEnabledTaskbar" :label="'Enable/disable taskbar'"
+            :on-change="onChangeAirbarTaskbarEnabled" />
+          <span class="italic">Enable or disable the always-on-top taskbar window.</span>
+        </div>
+        <div class="mt-8">
+          <Switch :modelValue="isEnabledAirbarTimeTracking" :label="'Enable/disable time tracking'"
+            :on-change="onChangeAirbarTimeTrackingEnabled" />
+          <span class="italic">Enable or disable time tracking for tasks.</span>
+        </div>
         <template v-if="enabledRetrospectionByResearcher">
           <div class="mt-8">
             <Switch :modelValue="isEnabledAirbarRetrospection" :label="'Enable/disable retrospection'"
@@ -122,11 +125,6 @@ const onChangeAirbarTaskPlanningEnabled = async (e: Event) => {
             <span class="italic">Enable or disable evening retrospection popup for AIRbar.</span>
           </div>
         </template>
-        <div class="mt-8">
-          <Switch :modelValue="isEnabledAirbarTimeTracking" :label="'Enable/disable time tracking'"
-            :on-change="onChangeAirbarTimeTrackingEnabled" />
-          <span class="italic">Enable or disable time tracking for tasks.</span>
-        </div>
       </div>
     </template>
 

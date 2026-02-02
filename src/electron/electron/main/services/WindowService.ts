@@ -406,19 +406,19 @@ export class WindowService {
             }
           },
           {
-            label: 'Retrospection',
-            visible: !!studyConfig.trackers.taskTracker?.enabledRetrospection,
-            click: async () => {
-              const { createRetrospectionWindow } = await import('@external/main/services/WindowService')
-              createRetrospectionWindow()
-            }
-          },
-          {
             label: 'Show/Hide Taskbar',
             visible: !!studyConfig.trackers.taskTracker?.enabledTaskbar,
             click: async () => {
               const { toggleTaskBarWindow } = await import('@external/main/services/WindowService')
               toggleTaskBarWindow()
+            }
+          },
+          {
+            label: 'Retrospection',
+            visible: !!studyConfig.trackers.taskTracker?.enabledRetrospection,
+            click: async () => {
+              const { createRetrospectionWindow } = await import('@external/main/services/WindowService')
+              createRetrospectionWindow()
             }
           }
         ]
