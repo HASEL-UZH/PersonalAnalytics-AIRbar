@@ -357,6 +357,13 @@ export class WindowService {
 
   private async getTrayMenuTemplate(): Promise<MenuItemConstructorOptions[]> {
     const settings: Settings = await Settings.findOne({ where: { onlyOneEntityShouldExist: 1 } })
+
+    const es = studyConfig.trackers.experienceSamplingTracker;
+    const allowDisable = es.allowUserToDisable ?? true;
+    const showSelfReportMenu =
+      es.enabled === true &&
+      (!allowDisable || (settings?.userDisabledExperienceSampling ?? 0) === 0);
+    
     const trayMenuItems: MenuItemConstructorOptions[] = [
       { label: `Version ${app.getVersion()}`, enabled: false },
       {
@@ -380,10 +387,11 @@ export class WindowService {
         enabled: false,
         visible: studyConfig.displayDaysParticipated
       },
-      { type: 'separator' },
+      // { type: 'separator' },
       {
-        label: 'Add Self-Report',
-        click: () => this.createExperienceSamplingWindow(true)
+        label: 'Add Self-Reflection',
+        click: () => this.createExperienceSamplingWindow(true),
+        visible: showSelfReportMenu
       },
       // ***AIRBAR - START
       {
@@ -391,18 +399,10 @@ export class WindowService {
         visible: !!studyConfig.trackers.taskTracker?.enabled && settings.enabledAirbar,
         submenu: [
           {
-            label: 'Edit Tasks',
+            label: 'Edit/Prioritize Tasks',
             click: async () => {
               const { createPlanningViewWindow } = await import('@external/main/services/WindowService')
               createPlanningViewWindow(true)
-            }
-          },
-          {
-            label: 'Retrospection',
-            visible: !!studyConfig.trackers.taskTracker?.enabledRetrospection,
-            click: async () => {
-              const { createRetrospectionWindow } = await import('@external/main/services/WindowService')
-              createRetrospectionWindow()
             }
           },
           {
@@ -411,6 +411,14 @@ export class WindowService {
             click: async () => {
               const { toggleTaskBarWindow } = await import('@external/main/services/WindowService')
               toggleTaskBarWindow()
+            }
+          },
+          {
+            label: 'Retrospection',
+            visible: !!studyConfig.trackers.taskTracker?.enabledRetrospection,
+            click: async () => {
+              const { createRetrospectionWindow } = await import('@external/main/services/WindowService')
+              createRetrospectionWindow()
             }
           }
         ]

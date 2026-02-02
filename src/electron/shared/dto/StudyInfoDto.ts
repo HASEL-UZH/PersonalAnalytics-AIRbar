@@ -9,11 +9,4 @@ export default interface StudyInfoDto {
   appVersion: string;
   currentlyActiveTrackers: string[];
   enabledWorkHours: boolean;
-  // ***AIRBAR - START
-  enabledAirbar: boolean;
-  enabledAirbarTaskbar: boolean;
-  enabledAirbarTaskPlanning: boolean;
-  enabledAirbarTimeTracking: boolean;
-  enabledAirbarRetrospection: boolean;
-  // ***AIRBAR - END
 }

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-
 import studyConfig from '../../shared/study.config'
 
 const considerWorkHours = studyConfig.trackers.experienceSamplingTracker.enabledWorkHours
 const enabledAirbar = studyConfig.trackers.taskTracker?.enabled;
 
+const es = studyConfig.trackers.experienceSamplingTracker;
+const showSelfReporting = es.enabled === true;
 </script>
-
 
 <template>
   <div class="settings-container">
@@ -17,11 +17,11 @@ const enabledAirbar = studyConfig.trackers.taskTracker?.enabled;
         <!-- ***AIRBAR - START -->
         <li v-if="enabledAirbar"><router-link to="airbar">AIRbar</router-link></li>
         <!-- ***AIRBAR - END -->
+        <li v-if="showSelfReporting"><router-link to="self-reporting">Self-Reflection</router-link></li>
       </ul>
     </nav>
     <div class="content">
-      <router-view>
-      </router-view>
+      <router-view />
     </div>
   </div>
 </template>

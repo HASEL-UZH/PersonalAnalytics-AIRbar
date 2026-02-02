@@ -11,8 +11,18 @@ const question = esConfig.questions[randomQuestionNr];
 const questionLabels = esConfig.responseOptions[randomQuestionNr];
 const scale = Array.from({ length: esConfig.scale }, (_, i) => i + 1);
 
-const promptedAt = new Date(Date.now());
-const promptedAtString = promptedAt.toLocaleTimeString().substring(0, 5);
+const language =
+  (typeof navigator !== 'undefined' &&
+    (navigator.language || (navigator.languages && navigator.languages[0]))) ||
+  'en';
+
+const promptedAt = new Date();
+const promptedAtString = new Intl.DateTimeFormat(language, {
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: false,
+  hourCycle: 'h23',
+}).format(promptedAt);
 
 const sampleLoadingValue = ref<number | null>();
 
@@ -60,7 +70,7 @@ async function skipExperienceSample() {
 <template>
   <div class="experience-sampling-notification flex flex-col">
     <div class="notification-top-bar">
-      <div>Self-Report: {{ studyConfig.name }}</div>
+      <div>Self-Reflection: {{ studyConfig.name }}</div>
       <div>{{ promptedAtString }}</div>
     </div>
     <div class="pointer-events-auto flex h-full flex-row">
