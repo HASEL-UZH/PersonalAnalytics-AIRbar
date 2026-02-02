@@ -11,7 +11,7 @@ const studyConfig: StudyConfiguration = {
   contactName: 'Dr. André Meyer',
   contactEmail: 'airbar@hasel.dev',
   subjectIdLength: 6,
-  dataExportEnabled: false,
+  dataExportEnabled: true,
   dataExportFormat: DataExportFormat.ExportToDDL, // default should be ExportAsZippedSqlite,
   dataExportEncrypted: false,
   displayDaysParticipated: false,
