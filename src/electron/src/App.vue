@@ -1,10 +1,12 @@
 <script lang="ts" setup></script>
 <template>
-  <router-view />
+  <div class="h-full overflow-hidden">
+    <router-view />
+  </div>
 </template>
+
 <style lang="less">
-#app {
-  @apply h-full overflow-hidden;
+html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
