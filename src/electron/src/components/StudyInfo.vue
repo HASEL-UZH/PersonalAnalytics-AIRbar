@@ -20,13 +20,13 @@ defineProps({
         <tr>
           <td class="w-40">Your Subject Id:</td>
           <td>
-            <span class="subject-badge">{{ studyInfo.subjectId }}</span>
+            <span class="badge badge-neutral text-white subject-badge">{{ studyInfo.subjectId }}</span>
           </td>
         </tr>
         <tr>
           <td class="w-40">License:</td>
           <td>
-            <span class="license-badge">Research Preview License</span>
+            <span class="badge badge-neutral text-white license-badge">Research Preview License</span>
           </td>
         </tr>
         <tr>
@@ -54,11 +54,9 @@ defineProps({
 <style lang="less">
 @import '../styles/index';
 .subject-badge {
-  @apply badge badge-neutral text-white;
   background-color: @primary-color;
 }
 .license-badge {
-  @apply badge badge-neutral text-white;
   background-color: #666;
 }
 </style>

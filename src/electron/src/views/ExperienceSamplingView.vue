@@ -68,20 +68,20 @@ async function skipExperienceSample() {
 }
 </script>
 <template>
-  <div class="experience-sampling-notification flex flex-col">
-    <div class="notification-top-bar">
+  <div class="flex h-full flex-col bg-white experience-sampling-notification">
+    <div class="notification-top-bar pointer-events-auto flex w-full flex-shrink-0 justify-between bg-gray-200 px-2 py-1 text-xs text-gray-500">
       <div>Self-Reflection: {{ studyConfig.name }}</div>
       <div>{{ promptedAtString }}</div>
     </div>
     <div class="pointer-events-auto flex h-full flex-row">
       <div class="flex-1 p-4 pt-1">
         <div class="flex-1">
-          <p class="prompt">{{ question }}</p>
+          <p class="prompt font-bold">{{ question }}</p>
           <div class="-mx-1 mt-2 flex flex-row justify-between">
             <div
               v-for="value in scale"
               :key="value"
-              class="sample-answer"
+              class="sample-answer mx-1 flex h-8 w-8 cursor-pointer items-center rounded-md border border-gray-200 bg-gray-100 text-center align-middle text-gray-500 transition-all hover:bg-gray-700 hover:text-white"
               @click="createExperienceSample(value)"
             >
               <span v-if="sampleLoadingValue !== value" class="mx-auto flex font-medium">
@@ -118,23 +118,16 @@ async function skipExperienceSample() {
 <style lang="less" scoped>
 @import '../styles/index';
 .experience-sampling-notification {
-  @apply h-full bg-white;
   user-select: none;
   overflow: hidden;
 
   .notification-top-bar {
-    @apply pointer-events-auto flex w-full flex-shrink-0 justify-between bg-gray-200 px-2 py-1 text-xs text-gray-500;
     line-height: 1.35rem;
     -webkit-app-region: drag;
   }
 
   .prompt {
-    @apply font-bold;
     color: @primary-color;
-  }
-
-  .sample-answer {
-    @apply mx-1 flex h-8 w-8 cursor-pointer items-center rounded-md border border-gray-200 bg-gray-100 text-center align-middle text-gray-500  transition-all hover:bg-gray-700 hover:text-white;
   }
 }
 </style>
