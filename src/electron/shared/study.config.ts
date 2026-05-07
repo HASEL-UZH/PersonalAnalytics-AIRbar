@@ -53,11 +53,11 @@ const studyConfig: StudyConfiguration = {
         //   responseOptions: 'singleLine',
         //   maxLength: 100
         // },
-        {
-          question: 'What best describes your current task type?',
-          answerType: 'SingleChoice',
-          responseOptions: ['Coding', 'Reading/Writing Documents', 'Meeting', 'Planning', 'Email & Chat Communication', 'Learning', 'Other']
-        },
+        // {
+        //   question: 'What best describes your current task type?',
+        //   answerType: 'SingleChoice',
+        //   responseOptions: ['Coding', 'Reading/Writing Documents', 'Meeting', 'Planning', 'Email & Chat Communication', 'Learning', 'Other']
+        // },
         // {
         //   question: 'Which distractions did you experience in the last session?',
         //   answerType: 'MultiChoice',
@@ -71,7 +71,7 @@ const studyConfig: StudyConfiguration = {
       userDefinedInterval_h: [0.5, 1, 2, 3, 4]
     },
     dailySurveyTracker: {
-      enabled: true,
+      enabled: false,
       surveys: [
         {
           samplingType: 'morning',
