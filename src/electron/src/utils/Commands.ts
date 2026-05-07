@@ -4,9 +4,10 @@ import { DataExportFormat } from '../../shared/DataExportFormat.enum';
 import UserInputDto from '../../shared/dto/UserInputDto';
 import WindowActivityDto from '../../shared/dto/WindowActivityDto';
 import ExperienceSamplingDto from '../../shared/dto/ExperienceSamplingDto';
+import DailySurveyDto, { DailySurveyResponseInput } from '../../shared/dto/DailySurveyDto';
 import { WorkHoursDto } from '../../shared/dto/WorkHoursDto'
 import { Settings } from 'electron/main'
-import type { ExperienceSamplingAnswerType } from '../../shared/StudyConfiguration';
+import type { DailySurveySamplingType, ExperienceSamplingAnswerType } from '../../shared/StudyConfiguration';
 
 type Commands = {
   createExperienceSample: (
@@ -16,7 +17,8 @@ type Commands = {
     responseOptions: string | null,
     scale?: number | null,
     response?: string,
-    skipped?: boolean
+    skipped?: boolean,
+    trigger?: 'manual' | 'auto'
   ) => Promise<void>;
   resizeExperienceSamplingWindow: (height: number) => void;
   closeExperienceSamplingWindow: (skippedExperienceSampling: boolean) => void;
@@ -54,5 +56,14 @@ type Commands = {
   retrospectionGetTopThreeMostActiveApps: (date: Date) => Promise<any[]>;
   openRetrospection: () => Promise<void>;
   closeRetrospectionWindow: () => void;
+  createDailySurveyResponses: (
+    promptedAt: Date,
+    samplingType: DailySurveySamplingType,
+    responses: DailySurveyResponseInput[]
+  ) => Promise<void>;
+  resizeDailySurveyWindow: (height: number) => void;
+  closeDailySurveyWindow: (skipped: boolean) => void;
+  postponeDailySurvey: (samplingType: DailySurveySamplingType, minutes: number) => Promise<void>;
+  getMostRecentDailySurveyDtos: (itemCount: number) => Promise<DailySurveyDto[]>;
 };
 export default Commands;

@@ -16,7 +16,6 @@ export interface WindowActivityTrackerConfiguration {
 
 export interface ExperienceSamplingTrackerConfiguration {
   enabled: boolean;
-  enabledWorkHours: boolean;
   questions: ExperienceSamplingQuestion[];
   intervalInMs: number;
   // value between 0 and 1
@@ -60,10 +59,26 @@ export interface ChoiceQuestion extends ExperienceSamplingQuestionBase {
 
 export type ExperienceSamplingQuestion = LikertScaleQuestion | TextResponseQuestion | ChoiceQuestion;
 
+export type DailySurveySamplingType = 'morning' | 'evening';
+
+export interface DailySurveyConfig {
+  samplingType: DailySurveySamplingType;
+  delayInMinutes: number;
+  requireAllAnswers: boolean;
+  questions: ExperienceSamplingQuestion[];
+}
+
+export interface DailySurveyTrackerConfiguration {
+  enabled: boolean;
+  surveys: DailySurveyConfig[];
+}
+
 export interface TrackerConfiguration {
+  enabledWorkHours: boolean;
   windowActivityTracker: WindowActivityTrackerConfiguration;
   userInputTracker: UserInputTrackerConfiguration;
   experienceSamplingTracker: ExperienceSamplingTrackerConfiguration;
+  dailySurveyTracker?: DailySurveyTrackerConfiguration;
 }
 
 export interface StudyConfiguration {

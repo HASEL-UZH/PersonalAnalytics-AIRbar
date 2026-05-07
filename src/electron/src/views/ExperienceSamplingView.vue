@@ -25,6 +25,7 @@ const language =
     (navigator.language || (navigator.languages && navigator.languages[0]))) ||
   'en';
 
+const trigger: 'manual' | 'auto' = new URLSearchParams(window.location.search).get('trigger') === 'manual' ? 'manual' : 'auto';
 const promptedAt = new Date();
 const promptedAtString = new Intl.DateTimeFormat(language, {
   hour: '2-digit',
@@ -164,7 +165,9 @@ async function createExperienceSample(answer?: number) {
         selectedQuestion.answerType,
         buildResponseOptionsSnapshot(),
         selectedQuestion.answerType === 'LikertScale' ? selectedQuestion.scale : null,
-        buildResponseValue(answer)
+        buildResponseValue(answer),
+        false,
+        trigger
       ),
       new Promise((resolve) => setTimeout(resolve, 150))
     ]);
@@ -190,7 +193,8 @@ async function skipExperienceSample() {
         buildResponseOptionsSnapshot(),
         selectedQuestion.answerType === 'LikertScale' ? selectedQuestion.scale : null,
         undefined,
-        true
+        true,
+        trigger
       ),
       new Promise((resolve) => setTimeout(resolve, 150))
     ]);
@@ -214,20 +218,22 @@ async function skipExperienceSample() {
         <div class="flex flex-1 flex-col">
           <p class="prompt">{{ selectedQuestion.question }}</p>
 
-          <div v-if="selectedQuestion.answerType === 'LikertScale'" class="-mx-1 mt-2 flex flex-row justify-between">
-            <div
+          <div v-if="selectedQuestion.answerType === 'LikertScale'" class="mt-2 flex flex-row gap-1.5">
+            <button
               v-for="value in scale"
               :key="value"
+              type="button"
               class="sample-answer"
-              @click="!isSubmitting && createExperienceSample(value)"
+              :disabled="isSubmitting"
+              @click="createExperienceSample(value)"
             >
-              <span v-if="!(isSubmitting && submitMode === 'answer')" class="mx-auto flex font-medium">
+              <span v-if="!(isSubmitting && submitMode === 'answer')">
                 {{ value }}
               </span>
-              <span v-else class="mx-auto flex font-medium">
+              <span v-else>
                 <span class="loading loading-spinner loading-xs" />
               </span>
-            </div>
+            </button>
           </div>
 
           <div v-if="selectedQuestion.answerType === 'LikertScale'" class="mt-1 flex flex-row text-sm text-gray-400 dark:text-gray-500">
