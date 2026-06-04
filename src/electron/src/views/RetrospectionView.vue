@@ -23,6 +23,8 @@ const allWindowActivities = ref<ActivitySessions[]>([]);
 const chartDataWindowActivities = ref<ChartDataPoint[]>();
 const longestTimeActive = ref<TimeActive | undefined>(undefined);
 const topApps = ref<ActivitySessions[] | undefined>(undefined);
+const topWebsites = ref<ActivitySessions[]>([]);
+const topWindowTitles = ref<ActivitySessions[]>([]);
 const ACTIVITY_BREAKDOWN_COVERAGE = 0.9;
 const ACTIVITY_BREAKDOWN_MAX_ITEMS = 6;
 const EXCLUDED_ACTIVITY_BREAKDOWN_GROUPS = new Set(['Other', 'Unknown']);
@@ -54,6 +56,10 @@ const latestUserComputerActivity = computed((): number => {
       return acc;
     }, 0) ?? 0
   );
+});
+
+const topItemsAvailable = computed((): boolean => {
+  return topWebsites.value.length > 0 || topWindowTitles.value.length > 0;
 });
 
 // Total tracked activity time is the denominator for percentages and the 90% cutoff.
@@ -155,6 +161,8 @@ async function loadData() {
   isLoading.value = true;
   await loadLongestTimeActive();
   await loadMostActiveApps();
+  await loadTopWebsites();
+  await loadTopWindowTitles();
   await loadWindowActivities();
   isLoading.value = false;
 }
@@ -207,6 +215,28 @@ async function loadMostActiveApps() {
   }
 }
 
+async function loadTopWebsites() {
+  try {
+    topWebsites.value = (await typedIpcRenderer.invoke(
+      'retrospectionGetTopThreeWebsites',
+      selectedDay.value
+    )) as ActivitySessions[];
+  } catch (error) {
+    console.error('Error loading top websites', error);
+  }
+}
+
+async function loadTopWindowTitles() {
+  try {
+    topWindowTitles.value = (await typedIpcRenderer.invoke(
+      'retrospectionGetTopThreeWindowTitles',
+      selectedDay.value
+    )) as ActivitySessions[];
+  } catch (error) {
+    console.error('Error loading top window titles', error);
+  }
+}
+
 function msToMinutes(ms: number): number {
   return Math.round(ms / 60000);
 }
@@ -243,6 +273,17 @@ function renderCompactTime(ms: number): string {
   const hours = Math.floor(minutes / 60);
   const remainingMinutes = minutes % 60;
   return remainingMinutes ? `${hours} hr ${remainingMinutes} min` : `${hours} hr`;
+}
+
+function getTopItemWidth(item: ActivitySessions, items: ActivitySessions[]): string {
+  const maxDurationMs = Math.max(...items.map((topItem) => topItem.totalDurationMs), 1);
+  return `${Math.max((item.totalDurationMs / maxDurationMs) * 100, 8)}%`;
+}
+
+function getTopItemColor(item: ActivitySessions): string {
+  const activity = item.activity || Activity.Other;
+  const colorKey = getTailwindClassFromActivity(activity) as keyof typeof Color;
+  return Color[colorKey] || Color['neutral-400'];
 }
 
 async function handleDayChange(event: Event) {
@@ -429,6 +470,70 @@ function getDayLabel(date: Date): string {
             </div>
           </div>
         </div>
+
+        <div v-if="topItemsAvailable" class="top-item-grid tile-grid">
+          <div
+            v-if="topWebsites.length"
+            class="top-item-card rounded border border-gray-200 bg-gray-100 px-4 py-3 text-gray-800 dark:border-transparent dark:bg-neutral-800 dark:text-slate-200"
+          >
+            <h2 class="primary-blue font-bold leading-4">Top websites</h2>
+            <ol class="top-item-list">
+              <li
+                v-for="website in topWebsites"
+                :key="website.type"
+                class="top-item-row"
+                :title="website.tooltipTitle || website.type"
+              >
+                <div class="top-item-content">
+                  <span class="top-item-label">{{ website.type }}</span>
+                  <span class="top-item-time">{{
+                    renderCompactTime(website.totalDurationMs)
+                  }}</span>
+                </div>
+                <div class="top-item-track">
+                  <div
+                    class="top-item-bar"
+                    :style="{
+                      width: getTopItemWidth(website, topWebsites),
+                      backgroundColor: getTopItemColor(website)
+                    }"
+                  ></div>
+                </div>
+              </li>
+            </ol>
+          </div>
+
+          <div
+            v-if="topWindowTitles.length"
+            class="top-item-card rounded border border-gray-200 bg-gray-100 px-4 py-3 text-gray-800 dark:border-transparent dark:bg-neutral-800 dark:text-slate-200"
+          >
+            <h2 class="primary-blue font-bold leading-4">Top window titles</h2>
+            <ol class="top-item-list">
+              <li
+                v-for="windowTitle in topWindowTitles"
+                :key="windowTitle.type"
+                class="top-item-row"
+                :title="windowTitle.tooltipTitle || windowTitle.type"
+              >
+                <div class="top-item-content">
+                  <span class="top-item-label">{{ windowTitle.type }}</span>
+                  <span class="top-item-time">{{
+                    renderCompactTime(windowTitle.totalDurationMs)
+                  }}</span>
+                </div>
+                <div class="top-item-track">
+                  <div
+                    class="top-item-bar"
+                    :style="{
+                      width: getTopItemWidth(windowTitle, topWindowTitles),
+                      backgroundColor: getTopItemColor(windowTitle)
+                    }"
+                  ></div>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
       </div>
     </div>
   </template>
@@ -456,6 +561,73 @@ h2.primary-blue {
   width: 100%;
 }
 
+.top-item-grid {
+  margin-top: 1.2rem;
+}
+
+.top-item-card {
+  min-height: 118px;
+}
+
+.top-item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin: 0.4rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.top-item-row {
+  min-height: 0;
+  padding: 0.2rem 0;
+}
+
+.top-item-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.15rem;
+  line-height: 1.25rem;
+}
+
+.top-item-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #1f2937;
+  font-weight: 400;
+}
+
+.top-item-time {
+  color: #374151;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.top-item-track {
+  height: 0.35rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #f3f4f6;
+}
+
+.top-item-bar {
+  height: 100%;
+  border-radius: inherit;
+}
+
+:global(.dark) .top-item-track {
+  background: #111111;
+}
+
+:global(.dark) .top-item-label,
+:global(.dark) .top-item-time {
+  color: #ffffff;
+}
+
 .activity-breakdown-card {
   min-height: 128px;
 }
@@ -481,16 +653,6 @@ h2.primary-blue {
   inset: 20px;
   border-radius: 50%;
   background: #f3f4f6;
-}
-
-@media (prefers-color-scheme: dark) {
-  .activity-pie-hole {
-    background: #262626;
-  }
-
-  .activity-breakdown-time {
-    color: #f1f5f9;
-  }
 }
 
 .activity-breakdown-list {
@@ -539,6 +701,25 @@ h2.primary-blue {
 :global(.dark) .activity-breakdown-time,
 :global([data-theme='dark']) .activity-breakdown-time {
   color: #f1f5f9;
+}
+
+@media (prefers-color-scheme: dark) {
+  .top-item-track {
+    background: #111111;
+  }
+
+  .top-item-label,
+  .top-item-time {
+    color: #ffffff;
+  }
+
+  .activity-pie-hole {
+    background: #262626;
+  }
+
+  .activity-breakdown-time {
+    color: #f1f5f9;
+  }
 }
 
 @media (max-width: 720px) {
