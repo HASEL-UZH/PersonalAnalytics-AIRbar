@@ -1,11 +1,14 @@
 import { Column, Entity } from 'typeorm';
 import BaseTrackedEntity from './BaseTrackedEntity';
-import type { ExperienceSamplingAnswerType } from '../../../shared/StudyConfiguration';
+import type { DailySurveySamplingType, ExperienceSamplingAnswerType } from '../../../shared/StudyConfiguration';
 
-@Entity({ name: 'experience_sampling_responses' })
-export class ExperienceSamplingResponseEntity extends BaseTrackedEntity {
+@Entity({ name: 'daily_survey_responses' })
+export class DailySurveyResponseEntity extends BaseTrackedEntity {
   @Column('datetime')
   promptedAt: Date;
+
+  @Column('text')
+  samplingType: DailySurveySamplingType;
 
   @Column('text')
   question: string;
@@ -16,15 +19,9 @@ export class ExperienceSamplingResponseEntity extends BaseTrackedEntity {
   @Column('text', { nullable: true })
   responseOptions: string | null;
 
-  @Column('int', { nullable: true })
-  scale: number | null;
-
   @Column('text', { nullable: true })
   response: string | null;
 
   @Column('boolean', { default: false, nullable: false })
   skipped: boolean;
-
-  @Column('text', { default: 'auto', nullable: false })
-  trigger: 'manual' | 'auto';
 }

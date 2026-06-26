@@ -10,7 +10,9 @@ import { DataExportType } from '../../shared/DataExportType.enum';
 import WindowActivityDto from '../../shared/dto/WindowActivityDto';
 import UserInputDto from '../../shared/dto/UserInputDto';
 import DataExportExperienceSamplingTracker from '../components/DataExportExperienceSamplingTracker.vue';
+import DataExportDailySurveyTracker from '../components/DataExportDailySurveyTracker.vue';
 import ExperienceSamplingDto from '../../shared/dto/ExperienceSamplingDto';
+import DailySurveyDto from '../../shared/dto/DailySurveyDto';
 import getRendererLogger from '../utils/Logger';
 
 const LOG = getRendererLogger('DataExportView');
@@ -23,6 +25,7 @@ const studyDescriptionExpanded = ref(false);
 const studyInfo = ref<StudyInfoDto>();
 
 const mostRecentExperienceSamples = ref<ExperienceSamplingDto[]>();
+const mostRecentDailySurveys = ref<DailySurveyDto[]>();
 const mostRecentUserInputs = ref<UserInputDto[]>();
 const mostRecentWindowActivities = ref<WindowActivityDto[]>();
 const mostRecentWindowActivitiesObfuscated = ref<WindowActivityDto[]>();
@@ -58,6 +61,12 @@ onMounted(async () => {
     exportExperienceSamplesSelectedOption.value = DataExportType.All;
     mostRecentExperienceSamples.value = await typedIpcRenderer.invoke(
       'getMostRecentExperienceSamplingDtos',
+      20
+    );
+  }
+  if (studyConfig.trackers.dailySurveyTracker?.enabled) {
+    mostRecentDailySurveys.value = await typedIpcRenderer.invoke(
+      'getMostRecentDailySurveyDtos',
       20
     );
   }
@@ -152,6 +161,11 @@ async function handleNextStep() {
     return;
   }
 
+  if (studyConfig.dataExportFormat === 'ExportToDDL' && currentNamedStep.value === 'export-2') {
+    const confirmed = await typedIpcRenderer.invoke('confirmDDLUpload');
+    if (!confirmed) return;
+  }
+
   transitionName.value = 'slide-left-right';
   currentStep.value++;
   if (currentNamedStep.value === 'create-export' || currentNamedStep.value === 'upload-to-ddl') {
@@ -172,7 +186,8 @@ async function handleNextStep() {
         exportUserInputSelectedOption.value,
         obfuscationTerms,
         studyConfig.dataExportEncrypted,
-        studyConfig.dataExportFormat
+        studyConfig.dataExportFormat, 
+        studyConfig.dataExportDDLProjectName
       );
 
       pathToExportedFile.value = exportResult.fullPath;
@@ -180,11 +195,12 @@ async function handleNextStep() {
       // Also update the DataExportService if you change the file name here
       fileName.value = exportResult.fileName;
 
-    } catch (e) {
+    } catch (e: unknown) {
       LOG.error(e);
       hasExportError.value = true;
+      const message = e instanceof Error ? e.message : typeof e === 'string' ? e : 'Unknown error during export';
       
-      showDataExportError();
+      showDataExportError(message);
       handleBackStep();
     }
     isExporting.value = false;
@@ -199,8 +215,8 @@ function handleBackStep() {
   currentStep.value--;
 }
 
-function showDataExportError() {
-  typedIpcRenderer.invoke('showDataExportError');
+function showDataExportError(errorMessage: string) {
+  typedIpcRenderer.invoke('showDataExportError', errorMessage);
 }
 
 function openUploadUrl(event: Event) {
@@ -221,6 +237,15 @@ function revealItemInFolder(event: Event) {
       class="flex h-full w-full items-center justify-center overflow-y-scroll"
     >
       <span class="loading loading-spinner loading-lg" />
+      <div v-if="isExporting" class="max-w-lg px-6 text-neutral-600 dark:text-neutral-400">
+        <p class="text-lg font-medium">
+          {{ studyConfig.dataExportFormat === 'ExportToDDL' ? 'Exporting and uploading your data...' : 'Exporting your data...' }}
+        </p>
+        <p class="mt-2 text-sm">
+          This may take a few minutes depending on the export size{{ studyConfig.dataExportFormat === 'ExportToDDL' ? ' and your internet connection' : '' }}.
+          Please keep this window open until the process is finished.
+        </p>
+      </div>
     </div>
     <div v-else class="relative flex h-full flex-col justify-between dark:text-neutral-400">
       <div class="mb-5 flex-grow overflow-y-auto">
@@ -377,6 +402,10 @@ function revealItemInFolder(event: Event) {
               :default-value="exportExperienceSamplesSelectedOption"
               @change="handleExperienceSamplingConfigChanged"
             />
+            <DataExportDailySurveyTracker
+              v-if="studyConfig.trackers.dailySurveyTracker?.enabled"
+              :data="mostRecentDailySurveys"
+            />
           </div>
         </transition-group>
       </div>
@@ -406,6 +435,7 @@ function revealItemInFolder(event: Event) {
 </template>
 <style lang="less" scoped>
 @import '../styles/variables.less';
+@import '@/styles/tailwind-apply.css';
 .password-badge {
   background-color: @primary-color;
 }

@@ -21,6 +21,7 @@ import { Settings } from './entities/Settings';
 import { UsageDataService } from './services/UsageDataService';
 import { UsageDataEventType } from '../enums/UsageDataEventType.enum';
 import { WorkScheduleService } from './services/WorkScheduleService';
+import { SchedulingService } from './services/SchedulingService';
 import dotenv from 'dotenv';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -67,7 +68,6 @@ const LOG = getMainLogger('Main');
 
 // Load environment variables from .env file
 dotenv.config();
-console.log('DDL_PROJECT_ID:', process.env.DDL_PROJECT_ID); // todo: temp: Confirm it's loaded
 
 
 app.whenReady().then(async () => {
@@ -88,6 +88,12 @@ app.whenReady().then(async () => {
     await settingsService.init();
     await windowService.init();
     await ipcHandler.init();
+
+    if (studyConfig.enableRetrospection ?? true) {
+      const workSchedule = await workScheduleService.getWorkSchedule();
+      const schedulingService = new SchedulingService(windowService, workSchedule);
+      ipcHandler.setSchedulingService(schedulingService);
+    }
 
     const currentTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const currentLocale = app.getLocale();
@@ -124,6 +130,14 @@ app.whenReady().then(async () => {
     }
     if (studyConfig.trackers.experienceSamplingTracker.enabled) {
       await trackers.registerTrackerCallback(TrackerType.ExperienceSamplingTracker);
+    }
+
+    if (studyConfig.trackers.dailySurveyTracker?.enabled) {
+      await trackers.registerTrackerCallback(TrackerType.DailySurveyTracker);
+      const dailySurveyTracker = trackers.getDailySurveyTracker();
+      if (dailySurveyTracker) {
+        ipcHandler.setDailySurveyTracker(dailySurveyTracker);
+      }
     }
 
     if (studyConfig.displayDaysParticipated) {

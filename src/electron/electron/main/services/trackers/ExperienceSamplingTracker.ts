@@ -18,7 +18,7 @@ export class ExperienceSamplingTracker implements Tracker {
   private readonly intervalInMs: number;
   private readonly samplingRandomization: number;
 
-  public readonly name: string = 'ExperienceSamplingTracker';
+  public readonly name: string = 'Experience Sampling';
   public isRunning: boolean = false;
 
   constructor(windowService: WindowService, workScheduleService: WorkScheduleService, intervalInMs: number, samplingRandomization: number) {
@@ -38,8 +38,9 @@ export class ExperienceSamplingTracker implements Tracker {
     if (allowChange) {
       const settings: Settings = await Settings.findOneBy({ onlyOneEntityShouldExist: 1 });
       const h = settings?.userDefinedExperienceSamplingInterval_h;
-      if (h != null && Number.isFinite(h)) {
-        return Math.max(1, h) * 60 * 60 * 1000; // hours → ms
+      LOG.debug(`User defined experience sampling interval in hours: ${h}`);
+      if (h != null && h !== 0 && Number.isFinite(h)) {
+        return h * 60 * 60 * 1000; // hours → ms
       }
     }
     return this.intervalInMs;
@@ -102,7 +103,7 @@ export class ExperienceSamplingTracker implements Tracker {
     const settings: Settings = await Settings.findOneBy({ onlyOneEntityShouldExist: 1 });  
     const userConsiderWorkHours = settings.enabledWorkHours;
     const inWorkHours = await this.workScheduleService.currentlyWithinWorkHours();
-    const considerWorkHours = studyConfig.trackers.experienceSamplingTracker.enabledWorkHours;
+    const considerWorkHours = studyConfig.trackers.enabledWorkHours;
     if (userConsiderWorkHours && considerWorkHours && !inWorkHours) {
         LOG.info('Currently outside of work hours, abort firing');
     } else {

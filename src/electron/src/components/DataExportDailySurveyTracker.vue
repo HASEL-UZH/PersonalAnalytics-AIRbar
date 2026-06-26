@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import { PropType } from 'vue';
-import ExperienceSamplingDto from '../../shared/dto/ExperienceSamplingDto';
+import { computed, PropType } from 'vue';
+import DailySurveyDto from '../../shared/dto/DailySurveyDto';
 
-defineProps({
+const props = defineProps({
   data: {
-    type: Object as PropType<ExperienceSamplingDto[]>,
+    type: Object as PropType<DailySurveyDto[]>,
     default: null,
     required: false
   }
 });
 
-function formatResponse(d: ExperienceSamplingDto): string {
+const answeredData = computed(() => props.data?.filter((d) => !d.skipped) ?? []);
+
+function formatResponse(d: DailySurveyDto): string {
   if (!d.response) return '';
   if (d.answerType === 'MultiChoice') {
     try {
@@ -23,7 +25,7 @@ function formatResponse(d: ExperienceSamplingDto): string {
   return d.response;
 }
 
-function formatResponseOptions(d: ExperienceSamplingDto): string {
+function formatResponseOptions(d: DailySurveyDto): string {
   if (!d.responseOptions) return '';
   try {
     const parsed = JSON.parse(d.responseOptions);
@@ -38,12 +40,8 @@ function formatResponseOptions(d: ExperienceSamplingDto): string {
         return (parsed.options as string[]).join(', ');
       }
     }
-    // backwards-compat: old rows stored as plain array or {inputType, maxLength}
     if (Array.isArray(parsed)) {
       return parsed.join(', ');
-    }
-    if (parsed.inputType) {
-      return `${parsed.inputType}, max ${parsed.maxLength}`;
     }
     return d.responseOptions;
   } catch {
@@ -54,9 +52,9 @@ function formatResponseOptions(d: ExperienceSamplingDto): string {
 <template>
   <div class="my-5 border border-slate-400 p-2">
     <div class="prose max-w-none">
-      <h2>Your Self Reported data</h2>
+      <h2>Your Daily Survey data</h2>
       <p>
-        Your responses to the self-reflection questions will also be shared with the
+        Your responses to the daily survey questions will also be shared with the
         researchers. They do <b>not</b> contain any sensitive data.</p>
         <p>Here is a sample of your unmodified data:</p>
     </div>
@@ -66,23 +64,21 @@ function formatResponseOptions(d: ExperienceSamplingDto): string {
       >
         <thead class="border-b">
           <tr>
+            <th>Sampling Type</th>
             <th>Question</th>
             <th>Answer Type</th>
             <th>Response</th>
-            <th>Scale</th>
             <th>Response Options</th>
-            <th>Skipped</th>
             <th>Created At</th>
           </tr>
         </thead>
         <tbody class="">
-          <tr v-for="d in data" :key="d.id">
+          <tr v-for="d in answeredData" :key="d.id">
+            <td>{{ d.samplingType }}</td>
             <td>{{ d.question }}</td>
             <td>{{ d.answerType }}</td>
             <td>{{ formatResponse(d) }}</td>
-            <td>{{ d.scale }}</td>
             <td>{{ formatResponseOptions(d) }}</td>
-            <td>{{ d.skipped }}</td>
             <td>{{ d.createdAt.toLocaleString() }}</td>
           </tr>
         </tbody>

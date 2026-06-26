@@ -1,8 +1,10 @@
 import { DataExportFormat } from './DataExportFormat.enum';
 
 export interface UserInputTrackerConfiguration {
-  enabled: boolean
-  intervalInMs: number
+  enabled: boolean;
+  intervalInMs: number;
+  // Optional flag for detailed key category counts (defaults to false).
+  collectKeyDetails?: boolean;
 }
 
 export interface WindowActivityTrackerConfiguration {
@@ -21,12 +23,9 @@ export interface TaskTrackerConfiguration {
 // ***AIRBAR - END
 
 export interface ExperienceSamplingTrackerConfiguration {
-  enabled: boolean
-  enabledWorkHours: boolean
-  scale: number
-  questions: string[]
-  responseOptions: string[][]
-  intervalInMs: number
+  enabled: boolean;
+  questions: ExperienceSamplingQuestion[];
+  intervalInMs: number;
   // value between 0 and 1
   // 0: no randomization, 1: randomization of 100%
   // Example: Interval (intervalInMs) is set to 60 minutes, randomization is set to 0.1
@@ -38,11 +37,57 @@ export interface ExperienceSamplingTrackerConfiguration {
   userDefinedInterval_h?: number[];
 }
 
+export type ExperienceSamplingAnswerType =
+  | 'LikertScale'
+  | 'TextResponse'
+  | 'SingleChoice'
+  | 'MultiChoice';
+
+export interface ExperienceSamplingQuestionBase {
+  question: string;
+  answerType: ExperienceSamplingAnswerType;
+}
+
+export interface LikertScaleQuestion extends ExperienceSamplingQuestionBase {
+  answerType: 'LikertScale';
+  scale: number;
+  responseOptions: string[];
+}
+
+export interface TextResponseQuestion extends ExperienceSamplingQuestionBase {
+  answerType: 'TextResponse';
+  responseOptions: 'singleLine' | 'multiLine';
+  maxLength: number;
+}
+
+export interface ChoiceQuestion extends ExperienceSamplingQuestionBase {
+  answerType: 'SingleChoice' | 'MultiChoice';
+  responseOptions: string[];
+}
+
+export type ExperienceSamplingQuestion = LikertScaleQuestion | TextResponseQuestion | ChoiceQuestion;
+
+export type DailySurveySamplingType = 'morning' | 'evening';
+
+export interface DailySurveyConfig {
+  samplingType: DailySurveySamplingType;
+  delayInMinutes: number;
+  requireAllAnswers: boolean;
+  questions: ExperienceSamplingQuestion[];
+}
+
+export interface DailySurveyTrackerConfiguration {
+  enabled: boolean;
+  surveys: DailySurveyConfig[];
+}
+
 export interface TrackerConfiguration {
-  windowActivityTracker: WindowActivityTrackerConfiguration
-  userInputTracker: UserInputTrackerConfiguration
-  experienceSamplingTracker: ExperienceSamplingTrackerConfiguration
-  taskTracker: TaskTrackerConfiguration // ***AIRBAR 
+  enabledWorkHours: boolean;
+  windowActivityTracker: WindowActivityTrackerConfiguration;
+  userInputTracker: UserInputTrackerConfiguration;
+  experienceSamplingTracker: ExperienceSamplingTrackerConfiguration;
+  taskTracker: TaskTrackerConfiguration; // ***AIRBAR
+  dailySurveyTracker?: DailySurveyTrackerConfiguration;
 }
 
 export interface StudyConfiguration {
@@ -57,7 +102,9 @@ export interface StudyConfiguration {
   dataExportEnabled: boolean;
   dataExportEncrypted: boolean;
   dataExportFormat: DataExportFormat;
+  dataExportDDLProjectName?: string;
   trackers: TrackerConfiguration;
   displayDaysParticipated: boolean;
   showActiveTimesInOnboarding?: boolean;
+  enableRetrospection?: boolean;
 }
