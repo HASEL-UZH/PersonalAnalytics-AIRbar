@@ -12,7 +12,20 @@ module.exports = {
     }
   },
   daisyui: {
-    themes: ['light', 'dark']
+    themes: [
+      {
+        light: {
+          ...require('daisyui/src/theming/themes')['light'],
+          primary: '#007acc'
+        }
+      },
+      {
+        dark: {
+          ...require('daisyui/src/theming/themes')['dark'],
+          primary: '#007acc'
+        }
+      }
+    ]
   },
   // needed for the dynamic classes
   safelist: [

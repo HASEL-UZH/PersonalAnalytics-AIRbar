@@ -527,42 +527,43 @@ export class WindowService {
         visible: studyConfig.displayDaysParticipated
       },
       // { type: 'separator' },
+      // ***AIRBAR - START
+      {
+        label: 'AIRbar:',
+        enabled: false,
+        visible: !!studyConfig.trackers.taskTracker?.enabled && settings.enabledAirbar
+      },
+      {
+        label: 'Edit/Prioritize Tasks',
+        visible: !!studyConfig.trackers.taskTracker?.enabled && settings.enabledAirbar,
+        click: async () => {
+          const { createPlanningViewWindow } = await import('@external/main/services/WindowService')
+          createPlanningViewWindow(true)
+        }
+      },
+      {
+        label: 'Show/Hide Taskbar',
+        visible: !!studyConfig.trackers.taskTracker?.enabled && settings.enabledAirbar && !!studyConfig.trackers.taskTracker?.enabledTaskbar,
+        click: async () => {
+          const { toggleTaskBarWindow } = await import('@external/main/services/WindowService')
+          toggleTaskBarWindow()
+        }
+      },
+      {
+        label: 'Retrospection',
+        visible: !!studyConfig.trackers.taskTracker?.enabled && settings.enabledAirbar && !!studyConfig.trackers.taskTracker?.enabledRetrospection,
+        click: async () => {
+          const { createRetrospectionWindow } = await import('@external/main/services/WindowService')
+          createRetrospectionWindow()
+        }
+      },
+      { type: 'separator' },
+      // ***AIRBAR - END
       {
         label: 'Add Self-Reflection',
         click: () => this.createExperienceSamplingWindow(true),
         visible: showSelfReportMenu
       },
-      // ***AIRBAR - START
-      {
-        label: 'AIRbar',
-        visible: !!studyConfig.trackers.taskTracker?.enabled && settings.enabledAirbar,
-        submenu: [
-          {
-            label: 'Edit/Prioritize Tasks',
-            click: async () => {
-              const { createPlanningViewWindow } = await import('@external/main/services/WindowService')
-              createPlanningViewWindow(true)
-            }
-          },
-          {
-            label: 'Show/Hide Taskbar',
-            visible: !!studyConfig.trackers.taskTracker?.enabledTaskbar,
-            click: async () => {
-              const { toggleTaskBarWindow } = await import('@external/main/services/WindowService')
-              toggleTaskBarWindow()
-            }
-          },
-          {
-            label: 'Retrospection',
-            visible: !!studyConfig.trackers.taskTracker?.enabledRetrospection,
-            click: async () => {
-              const { createRetrospectionWindow } = await import('@external/main/services/WindowService')
-              createRetrospectionWindow()
-            }
-          }
-        ]
-      },
-      // ***AIRBAR - END
       ...(studyConfig.trackers.dailySurveyTracker?.enabled
         ? studyConfig.trackers.dailySurveyTracker.surveys.map((survey) => ({
             label: `Daily Survey (${survey.samplingType === 'morning' ? 'Start-of-Workday' : 'End-of-Workday'})`,
@@ -570,11 +571,6 @@ export class WindowService {
             visible: is.dev,
           }))
         : []),
-      {
-        label: 'Retrospection',
-        click: () => this.createRetrospectionWindow(),
-        visible: studyConfig.enableRetrospection ?? true
-      },
       {
         label: 'Settings',
         click: () => this.createSettingsWindow()
