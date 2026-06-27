@@ -34,8 +34,7 @@ const isMacOS: string | null | LocationQueryValue[] = route.query.isMacOS;
 const goToStep: string | null | LocationQueryValue[] = route.query.goToStep;
 
 const shouldShowActiveTimesStep = computed(() => {
-  const es = studyConfig.trackers.experienceSamplingTracker;
-  return studyConfig.showActiveTimesInOnboarding === true && es?.enabledWorkHours === true;
+  return studyConfig.showActiveTimesInOnboarding === true && studyConfig.trackers.enabledWorkHours === true;
 });
 
 const availableSteps = ['welcome'];
@@ -348,7 +347,7 @@ const onChangeActiveTimesEnabled = async (e: Event) => {
               overflow.
             </p>
             <p>
-              The following trackers are currently running:
+              The following monitors are currently running:
               {{ studyInfo.currentlyActiveTrackers.join(', ') }}
             </p>
 

@@ -71,4 +71,19 @@ export class Settings extends BaseEntity {
 
   @Column({ type: 'float', nullable: true })
   userDefinedExperienceSamplingInterval_h: number | null;
+
+  @Column({ type: 'integer', default: 0 })
+  userDisabledRetrospection: number;
+
+  @Column('datetime', { nullable: true })
+  nextDailySurveyMorningInvocation: Date;
+
+  @Column('datetime', { nullable: true })
+  nextDailySurveyEveningInvocation: Date;
+
+  @Column('datetime', { nullable: true })
+  postponedDailySurveyMorningUntil: Date | null;
+
+  @Column('datetime', { nullable: true })
+  postponedDailySurveyEveningUntil: Date | null;
 }

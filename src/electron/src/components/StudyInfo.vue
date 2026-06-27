@@ -10,7 +10,7 @@ defineProps({
 });
 </script>
 <template>
-  <article class="prose prose-lg mt-4">
+  <article class="prose prose-lg mt-4 dark:prose-invert">
     <h2>Study Info</h2>
     <div class="-mr-6 max-h-64 overflow-y-auto pr-4">
       <div class="my-0 text-base" v-html="studyInfo.shortDescription" />
@@ -52,7 +52,8 @@ defineProps({
   </article>
 </template>
 <style lang="less">
-@import '../styles/index';
+@import '@/styles/index.less';
+@import '../styles/tailwind-apply.css';
 .subject-badge {
   background-color: @primary-color;
 }

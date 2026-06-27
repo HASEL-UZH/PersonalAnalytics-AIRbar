@@ -9,7 +9,8 @@ import { UserInputEntity } from '../entities/UserInputEntity';
 import { Settings } from '../entities/Settings';
 import { UsageDataEntity } from '../entities/UsageDataEntity';
 import config from '../../../shared/study.config'; // ***AIRBAR
-import { WorkDayEntity } from '../entities/WorkDayEntity'
+import { WorkDayEntity } from '../entities/WorkDayEntity';
+import { DailySurveyResponseEntity } from '../entities/DailySurveyResponseEntity';
 
 const LOG = getMainLogger('DatabaseService');
 
@@ -26,16 +27,17 @@ export class DatabaseService {
     }
     LOG.info('Using database path:', this.dbPath);
   }
-  
+
   public async init(): Promise<void> {
-    let entities: any = [
+    const entities: any[] = [
+      DailySurveyResponseEntity,
       ExperienceSamplingResponseEntity,
       Settings,
       UsageDataEntity,
       UserInputEntity,
       WindowActivityEntity,
       WorkDayEntity
-    ]
+    ];
 
     // ***AIRBAR - START
     if (config.trackers.taskTracker?.enabled) {
@@ -43,24 +45,25 @@ export class DatabaseService {
       const { TaskActivityEntity } = await import('@external/main/entities/TaskActivityEntity');
       entities.push(PersonalTaskEntity);
       entities.push(TaskActivityEntity);
-    } 
+    }
     // ***AIRBAR - END
-    
-    let options: DataSourceOptions = {
+
+    const options: DataSourceOptions = {
       type: 'better-sqlite3',
       database: this.dbPath,
       synchronize: true,
       logging: false,
-      entities: entities,
+      entities
     };
-    
+
     this.dataSource = new DataSource(options);
 
     try {
       await this.dataSource.initialize();
       LOG.info('Database connection established');
     } catch (error) {
-      LOG.error('Database connection failed', error, error.stack);
+      LOG.error('Database connection failed', error);
+      throw error;
     }
   }
 

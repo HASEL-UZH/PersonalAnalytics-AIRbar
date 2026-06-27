@@ -17,12 +17,31 @@ import { DataExportService } from '../main/services/DataExportService';
 import UserInputDto from '../../shared/dto/UserInputDto';
 import WindowActivityDto from '../../shared/dto/WindowActivityDto';
 import ExperienceSamplingDto from '../../shared/dto/ExperienceSamplingDto';
+import DailySurveyDto, { DailySurveyResponseInput } from '../../shared/dto/DailySurveyDto';
+import { DailySurveyService } from '../main/services/DailySurveyService';
 import { is } from '../main/services/utils/helpers';
 import { JSDOM } from 'jsdom';
 import DOMPurify from 'dompurify';
-import { WorkScheduleService } from 'electron/main/services/WorkScheduleService'
-import { WorkHoursDto } from 'shared/dto/WorkHoursDto'
+import { WorkScheduleService } from 'electron/main/services/WorkScheduleService';
+import { WorkHoursDto } from 'shared/dto/WorkHoursDto';
+import {
+  getActivitySessions,
+  getAppUsageSessions,
+  getLongestTimeActiveInsight,
+  getTopWebsiteSessions,
+  getTopWindowTitleSessions,
+  ActivitySessions,
+  TimeActive
+} from '../main/services/RetrospectionService';
+import { SchedulingService } from '../main/services/SchedulingService';
 import path from 'path';
+import type {
+  DailySurveySamplingType,
+  ExperienceSamplingAnswerType
+} from '../../shared/StudyConfiguration';
+import { DailySurveyTracker } from '../main/services/trackers/DailySurveyTracker';
+import { UsageDataService } from '../main/services/UsageDataService';
+import { UsageDataEventType } from '../enums/UsageDataEventType.enum';
 
 const LOG = getMainLogger('IpcHandler');
 
@@ -32,10 +51,13 @@ export class IpcHandler {
   private readonly trackerService: TrackerService;
 
   private readonly experienceSamplingService: ExperienceSamplingService;
+  private readonly dailySurveyService: DailySurveyService;
   private readonly windowActivityService: WindowActivityTrackerService;
   private readonly userInputService: UserInputTrackerService;
   private readonly dataExportService: DataExportService;
   private readonly workScheduleService: WorkScheduleService;
+  private schedulingService: SchedulingService;
+  private dailySurveyTracker: DailySurveyTracker | null = null;
   private typedIpcMain: TypedIpcMain<Events, Commands> = ipcMain as TypedIpcMain<Events, Commands>;
 
   constructor(
@@ -47,10 +69,19 @@ export class IpcHandler {
     this.windowService = windowService;
     this.trackerService = trackerService;
     this.experienceSamplingService = experienceSamplingService;
+    this.dailySurveyService = new DailySurveyService();
     this.windowActivityService = new WindowActivityTrackerService();
     this.userInputService = new UserInputTrackerService();
     this.dataExportService = new DataExportService();
     this.workScheduleService = workScheduleService;
+  }
+
+  public setDailySurveyTracker(tracker: DailySurveyTracker): void {
+    this.dailySurveyTracker = tracker;
+  }
+
+  public setSchedulingService(schedulingService: SchedulingService): void {
+    this.schedulingService = schedulingService;
   }
 
   public async init(): Promise<void> {
@@ -62,6 +93,7 @@ export class IpcHandler {
       setSettingsProp: this.setSettingsProp,
       getSettings: this.getSettings,
       createExperienceSample: this.createExperienceSample,
+      resizeExperienceSamplingWindow: this.resizeExperienceSamplingWindow,
       closeExperienceSamplingWindow: this.closeExperienceSamplingWindow,
       closeOnboardingWindow: this.closeOnboardingWindow,
       closeDataExportWindow: this.closeDataExportWindow,
@@ -74,9 +106,22 @@ export class IpcHandler {
       revealItemInFolder: this.revealItemInFolder,
       openUploadUrl: this.openUploadUrl,
       showDataExportError: this.showDataExportError,
+      confirmDDLUpload: this.confirmDDLUpload,
       startAllTrackers: this.startAllTrackers,
       triggerPermissionCheckAccessibility: this.triggerPermissionCheckAccessibility,
-      triggerPermissionCheckScreenRecording: this.triggerPermissionCheckScreenRecording
+      triggerPermissionCheckScreenRecording: this.triggerPermissionCheckScreenRecording,
+      retrospectionGetActivities: this.retrospectionGetActivities,
+      retrospectionLoadLongestTimeActive: this.retrospectionLoadLongestTimeActive,
+      retrospectionGetTopThreeMostActiveApps: this.retrospectionGetTopThreeMostActiveApps,
+      retrospectionGetTopThreeWebsites: this.retrospectionGetTopThreeWebsites,
+      retrospectionGetTopThreeWindowTitles: this.retrospectionGetTopThreeWindowTitles,
+      openRetrospection: this.openRetrospection,
+      closeRetrospectionWindow: this.closeRetrospectionWindow,
+      createDailySurveyResponses: this.createDailySurveyResponses,
+      resizeDailySurveyWindow: this.resizeDailySurveyWindow,
+      closeDailySurveyWindow: this.closeDailySurveyWindow,
+      postponeDailySurvey: this.postponeDailySurvey,
+      getMostRecentDailySurveyDtos: this.getMostRecentDailySurveyDtos
     };
 
     // ***AIRBAR - START
@@ -103,7 +148,8 @@ export class IpcHandler {
           return await this.actions[action].apply(this, args);
         } catch (error) {
           LOG.error(error);
-          return error;
+          // return error;
+          throw error;
         }
       });
     });
@@ -112,18 +158,22 @@ export class IpcHandler {
   private async createExperienceSample(
     promptedAt: Date,
     question: string,
-    responseOptions: string,
-    scale: number,
-    response: number,
-    skipped: boolean = false
+    answerType: ExperienceSamplingAnswerType,
+    responseOptions: string | null,
+    scale: number | null,
+    response?: string,
+    skipped: boolean = false,
+    trigger: 'manual' | 'auto' = 'auto'
   ) {
     await this.experienceSamplingService.createExperienceSample(
       promptedAt,
       question,
+      answerType,
       responseOptions,
       scale,
       response,
-      skipped
+      skipped,
+      trigger
     );
   }
 
@@ -137,6 +187,10 @@ export class IpcHandler {
     shell.showItemInFolder(path.join(app.getPath('userData'), 'database.sqlite'));
   }
 
+  private resizeExperienceSamplingWindow(height: number): void {
+    this.windowService.resizeExperienceSamplingWindow(height);
+  }
+
   private closeExperienceSamplingWindow(skippedExperienceSampling: boolean): void {
     this.windowService.closeExperienceSamplingWindow(skippedExperienceSampling);
   }
@@ -148,13 +202,17 @@ export class IpcHandler {
   private closeDataExportWindow(): void {
     this.windowService.closeDataExportWindow();
   }
-  
+
   private async getWorkHours(): Promise<WorkHoursDto> {
     return this.workScheduleService.getWorkSchedule();
   }
 
   private async setWorkHours(schedule: WorkHoursDto): Promise<void> {
     await this.workScheduleService.setWorkSchedule(schedule);
+
+    if (this.schedulingService) {
+      this.schedulingService.updateRetrospectionJobs(schedule);
+    }
   }
 
   private async setSettingsProp(prop: string, value: any): Promise<void> {
@@ -225,7 +283,8 @@ export class IpcHandler {
       contactName: studyConfig.contactName,
       contactEmail: studyConfig.contactEmail,
       appVersion: app.getVersion(),
-      currentlyActiveTrackers: this.trackerService.getRunningTrackerNames()
+      currentlyActiveTrackers: this.trackerService.getRunningTrackerNames(),
+      enabledWorkHours: settings.enabledWorkHours
     };
   }
 
@@ -253,28 +312,45 @@ export class IpcHandler {
     obfuscationTerms: string[],
     encryptData: boolean,
     exportFormat: DataExportFormat,
+    exportDDLProjectName?: string
   ): Promise<{ fullPath: string; fileName: string }> {
     return this.dataExportService.startDataExport(
       windowActivityExportType,
       userInputExportType,
       obfuscationTerms,
       encryptData,
-      exportFormat
+      exportFormat,
+      exportDDLProjectName
     );
   }
 
   private async revealItemInFolder(path: string): Promise<void> {
     this.windowService.showItemInFolder(path);
   }
-  
+
   private async openUploadUrl(): Promise<void> {
     this.windowService.openExternal();
   }
 
-  private async showDataExportError(): Promise<void> {
-    dialog.showErrorBox(
-      'Study Data Export failed', 
-      `Please try again or contact the study team (${studyConfig.contactName}, ${studyConfig.contactEmail}) for help.`);
+  private async confirmDDLUpload(): Promise<boolean> {
+    const { response } = await dialog.showMessageBox({
+      type: 'question',
+      buttons: ['Yes', 'Cancel'],
+      defaultId: 0,
+      cancelId: 1,
+      title: 'Confirm Data Donation',
+      message: `Do you agree to donate and upload your data to the ${studyConfig.name} study?`,
+      detail:
+        "Your data will be uploaded via a secure, encrypted connection to a secure, encrypted store operated by the University of Zurich (Data Donation Lab). Your data will be processed in accordance with the study's consent form."
+    });
+    return response === 0;
+  }
+
+  private async showDataExportError(errorMessage?: string): Promise<void> {
+    const message =
+      `Please try again. If the export keeps failing, contact the study team (${studyConfig.contactName}, ${studyConfig.contactEmail}) and send them a screenshot of this error.` +
+      (errorMessage ? `\n\nError message: ${errorMessage}` : '');
+    dialog.showErrorBox('Study Data Export failed', message);
   }
 
   private triggerPermissionCheckAccessibility(prompt: boolean): boolean {
@@ -298,5 +374,101 @@ export class IpcHandler {
     } catch (e) {
       LOG.error('Error starting trackers', e);
     }
+  }
+
+  private async retrospectionGetActivities(date: Date): Promise<ActivitySessions[]> {
+    return await getActivitySessions(new Date(date));
+  }
+
+  private async retrospectionLoadLongestTimeActive(date: Date): Promise<TimeActive | undefined> {
+    try {
+      return await getLongestTimeActiveInsight(new Date(date));
+    } catch (error) {
+      LOG.error('Error loading longest time active', error);
+    }
+  }
+
+  private async retrospectionGetTopThreeMostActiveApps(
+    date: Date
+  ): Promise<ActivitySessions[] | undefined> {
+    try {
+      return (await getAppUsageSessions(new Date(date)))
+        .sort((a, b) => b.totalDurationMs - a.totalDurationMs)
+        .slice(0, 3);
+    } catch (error) {
+      LOG.error('Error loading top apps', error);
+    }
+  }
+
+  private async retrospectionGetTopThreeWebsites(
+    date: Date
+  ): Promise<ActivitySessions[] | undefined> {
+    try {
+      return await getTopWebsiteSessions(new Date(date), 3);
+    } catch (error) {
+      LOG.error('Error loading top websites', error);
+    }
+  }
+
+  private async retrospectionGetTopThreeWindowTitles(
+    date: Date
+  ): Promise<ActivitySessions[] | undefined> {
+    try {
+      return await getTopWindowTitleSessions(new Date(date), 3);
+    } catch (error) {
+      LOG.error('Error loading top window titles', error);
+    }
+  }
+
+  private async openRetrospection(): Promise<void> {
+    await this.windowService.createRetrospectionWindow();
+  }
+
+  private closeRetrospectionWindow(): void {
+    this.windowService.closeRetrospectionWindow();
+  }
+
+  private async createDailySurveyResponses(
+    promptedAt: Date,
+    samplingType: DailySurveySamplingType,
+    scheduledDate: Date | null,
+    responses: DailySurveyResponseInput[]
+  ): Promise<void> {
+    await this.dailySurveyService.createDailySurveyResponses(promptedAt, samplingType, responses);
+    if (this.dailySurveyTracker) {
+      await this.dailySurveyTracker.complete(
+        samplingType,
+        scheduledDate ? new Date(scheduledDate) : null
+      );
+    }
+  }
+
+  private resizeDailySurveyWindow(height: number): void {
+    this.windowService.resizeDailySurveyWindow(height);
+  }
+
+  private closeDailySurveyWindow(skipped: boolean): void {
+    this.windowService.closeDailySurveyWindow(skipped);
+  }
+
+  private async postponeDailySurvey(
+    samplingType: DailySurveySamplingType,
+    minutes: number
+  ): Promise<void> {
+    if (this.dailySurveyTracker) {
+      const wasPostponed = await this.dailySurveyTracker.postpone(samplingType, minutes);
+      if (!wasPostponed) {
+        return;
+      }
+    }
+    UsageDataService.createNewUsageDataEvent(
+      UsageDataEventType.DailySurveyPostponed,
+      JSON.stringify({ samplingType, postponedMinutes: minutes })
+    );
+    this.windowService.closeDailySurveyWindow(false, false);
+  }
+
+  private async getMostRecentDailySurveyDtos(itemCount: number): Promise<DailySurveyDto[]> {
+    return await this.dailySurveyService.getMostRecentDailySurveyDtos(itemCount);
   }
 }

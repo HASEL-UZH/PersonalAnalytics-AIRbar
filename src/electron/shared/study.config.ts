@@ -16,6 +16,7 @@ const studyConfig: StudyConfiguration = {
   dataExportEncrypted: false,
   displayDaysParticipated: false,
   showActiveTimesInOnboarding: true,
+  enableRetrospection: true,
   trackers: {
     // ***AIRBAR - START
     taskTracker: {
@@ -24,6 +25,7 @@ const studyConfig: StudyConfiguration = {
       enabledRetrospection: true
     },
     // ***AIRBAR - END
+    enabledWorkHours: true,
     windowActivityTracker: {
       enabled: true,
       intervalInMs: 1000,
@@ -32,25 +34,66 @@ const studyConfig: StudyConfiguration = {
     },
     userInputTracker: {
       enabled: true,
-      intervalInMs: 60000
+      intervalInMs: 60000,
+      collectKeyDetails: false
     },
     experienceSamplingTracker: {
       enabled: true,
-      enabledWorkHours: true,
-      scale: 7,
       questions: [
-        'Compared to your normal level of productivity, how productive do you consider the previous session?',
-        'How well did you spend your time in the previous session?'
-      ],
-      responseOptions: [
-        ['not at all productive', 'moderately productive', 'very productive'],
-        ['not well', 'moderately well', 'very well']
+        {
+          question:
+            'Compared to your normal level of productivity, how productive do you consider the previous session?',
+          answerType: 'LikertScale',
+          scale: 7,
+          responseOptions: ['not at all productive', 'moderately productive', 'very productive']
+        },
+        {
+          question: 'How well did you spend your time in the previous session?',
+          answerType: 'LikertScale',
+          scale: 5,
+          responseOptions: ['not well', 'moderately well', 'very well']
+        },
+        // {
+        //   question: 'What is one aspect that affected your ability to focus the most in the last session?',
+        //   answerType: 'TextResponse',
+        //   responseOptions: 'singleLine',
+        //   maxLength: 100
+        // },
+        // {
+        //   question: 'What best describes your current task type?',
+        //   answerType: 'SingleChoice',
+        //   responseOptions: ['Coding', 'Reading/Writing Documents', 'Meeting', 'Planning', 'Email & Chat Communication', 'Learning', 'Other']
+        // },
+        // {
+        //   question: 'Which distractions did you experience in the last session?',
+        //   answerType: 'MultiChoice',
+        //   responseOptions: ['Notifications', 'Meetings', 'Context switching', 'Personal interruptions', 'None']
+        // }
       ],
       intervalInMs: 1000 * 60 * 60 * 1, // default interval (must be listed in userDefinedInterval_h if set)
       samplingRandomization: 0.2, // 20% randomization, so the interval will be between 48 and 72 minutes
       allowUserToDisable: true,
       allowUserToChangeInterval: true,
       userDefinedInterval_h: [0.5, 1, 2, 3, 4]
+    },
+    dailySurveyTracker: {
+      enabled: false,
+      surveys: [
+        {
+          samplingType: 'morning',
+          delayInMinutes: 5,
+          requireAllAnswers: false,
+          questions: [
+          ]
+        },
+        {
+          samplingType: 'evening',
+          delayInMinutes: -30,
+          requireAllAnswers: false,
+          questions: [
+          ]
+        }
+      ]
     }
   }
 };

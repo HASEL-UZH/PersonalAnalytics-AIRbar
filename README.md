@@ -16,6 +16,9 @@ The monitoring component captures computer interaction data including user input
 
 Anyone is welcome to contribute to PersonalAnalytics by extending it with new trackers or improving existing ones. Feel free to use PersonalAnalytics to get insights into your own work habits, or use it for research studies. In case you re-use PersonalAnalytics, ensure to provide proper [attribution as described here](./documentation/RESEARCH.md).
 
+> [!NOTE]
+> PersonalAnalytics is a [featured project](https://maintainermonth.github.com/academia/personal-analytics-maintainer-spotlight) on the Github Academic Maintainer Spotlight!
+
 
 ## 🧑‍💻 Installation & Usage as a User
 Anyone may install PersonalAnalytics on their Windows or macOS device to non-intrusively collect computer interaction data, and analyze their activity, time spent and work habits for themselves. In the future, once we'll re-introduce the Retrospection (i.e. visualizations of the collected and self-reported data), it will be much easier to gain insights again.
@@ -25,7 +28,7 @@ Learn more about how to [install and use PersonalAnalytics](./documentation/INST
 ## 👩‍🔬 Customization & Usage as a Researcher
 [![Build and Publish PersonalAnalytics](https://github.com/HASEL-UZH/PersonalAnalytics/actions/workflows/build.yml/badge.svg)](https://github.com/HASEL-UZH/PersonalAnalytics/actions/workflows/build.yml)
 
-This project was created by and for researchers who want to ask study participants to run PersonalAnalytics on their device to non-intrusively collect **computer interaction data** in a privacy-protected way. As often times, having access to only automatically collected data is often not sufficient, PersonalAnalytics also offers an **experience sampling component**, which allows researchers to ask users to reflect and self-report on one or several questions (e.g. Have I been productive? Am I stressed right now?) at customizable times and using Likert-scales. As all collected data is only stored locally on participants' computers, there is an **export component**, guiding the participant through sharing and potentially obfuscating the captured data, before sharing it with the researchers through their data transfer service of choice. Most settings are configurable in the [study-config]([url](https://github.com/HASEL-UZH/PersonalAnalytics/blob/feature/electron/src/electron/shared/study.config.ts)), everything else can be customized in code.
+This project was created by and for researchers who want to ask study participants to run PersonalAnalytics on their device to non-intrusively collect **computer interaction data** in a privacy-protected way. As often times, having access to only automatically collected data is often not sufficient, PersonalAnalytics also offers an **experience sampling component**, which allows researchers to ask users to reflect and self-report on one or several questions (e.g. Have I been productive? Am I stressed right now?) at customizable times and using Likert-scales. In addition, a **daily survey component** allows researchers to define morning and/or evening questionnaires triggered relative to participants' work hours. As all collected data is only stored locally on participants' computers, there is an **export component**, guiding the participant through sharing and potentially obfuscating the captured data, before sharing it with the researchers through their data transfer service of choice. Most settings are configurable in the [study-config]([url](https://github.com/HASEL-UZH/PersonalAnalytics/blob/feature/electron/src/electron/shared/study.config.ts)), everything else can be customized in code.
 
 Learn more about how to use [PersonalAnalytics for your research project](./documentation/RESEARCH.md).
 
@@ -36,13 +39,14 @@ Learn more about how to use [PersonalAnalytics for your research project](./docu
 - [Data Collection & Privacy Policy](./documentation/PRIVACY.md)
 - [Contributions](./documentation/RESEARCH.md#contributions-guide)
 - [Information on the old PersonalAnalytics](./documentation/LEGACY.md)
+- [Interview discussing the project](https://maintainermonth.github.com/academia/personal-analytics-maintainer-spotlight)
 - Questions? Contact [Dr. André Meyer](mailto:ameyer@ifi.uzh.ch)
 
 
 ## 🕒 Maintenance Status
 The original version of PersonalAnalytics for Windows (created by André Meyer) and for macOS (created by Roy Rutishauser and Chris Satterfield), and supported by several other contributors, have been deprecated and are no longer maintained. In case of interest, you can learn more about [PersonalAnalytics-legacy here](./documentation/LEGACY.md).
 
-In 2024, we've revived the project in creating a multi-platform app using TypeScript and Electron. It is using the TypeScript-versions of our original, most used data trackers, the [WindowsActivityTracker](https://github.com/HASEL-UZH/PA.WindowsActivityTracker/tree/main/typescript) and the [UserInputTracker](https://github.com/HASEL-UZH/PA.UserInputTracker/tree/main/typescript). In addition, it includes an experience sampling component that can ask users to provide self-reports on one or several questions at customizable times. At the moment, the new PersonalAnalytics does NOT yet feature a retrospection, but it's the plan to recreate it in the future.
+In 2024, we've revived the project in creating a multi-platform app using TypeScript and Electron. It is using the TypeScript-versions of our original, most used data trackers, the [WindowsActivityTracker](https://github.com/HASEL-UZH/PA.WindowsActivityTracker/tree/main/typescript) and the [UserInputTracker](https://github.com/HASEL-UZH/PA.UserInputTracker/tree/main/typescript). In addition, it includes an experience sampling component that can ask users to provide self-reports on one or several questions at customizable times, and a daily survey component for structured morning/evening questionnaires. At the moment, the new PersonalAnalytics does NOT yet feature a retrospection, but it's the plan to recreate it in the future.
 
 
 ## 🙂 Main Contributors and People Involved

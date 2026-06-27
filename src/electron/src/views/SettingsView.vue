@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import studyConfig from '../../shared/study.config'
 
-const considerWorkHours = studyConfig.trackers.experienceSamplingTracker.enabledWorkHours
+const considerWorkHours = studyConfig.trackers.enabledWorkHours;
 const enabledAirbar = studyConfig.trackers.taskTracker?.enabled;
 
 const es = studyConfig.trackers.experienceSamplingTracker;
@@ -30,6 +30,15 @@ const showSelfReporting = es.enabled === true;
 .settings-container {
   display: flex;
   height: 100vh;
+  background-color: white;
+  color: #1f2937;
+}
+
+@media (prefers-color-scheme: dark) {
+  .settings-container {
+    background-color: #1f2937;
+    color: #e5e7eb;
+  }
 }
 
 .sidenav {
@@ -64,5 +73,6 @@ const showSelfReporting = es.enabled === true;
 .content {
   flex: 1;
   padding: 20px;
+  overflow-y: auto;
 }
 </style>

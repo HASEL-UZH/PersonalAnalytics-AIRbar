@@ -4,18 +4,27 @@ import { DataExportFormat } from '../../shared/DataExportFormat.enum';
 import UserInputDto from '../../shared/dto/UserInputDto';
 import WindowActivityDto from '../../shared/dto/WindowActivityDto';
 import ExperienceSamplingDto from '../../shared/dto/ExperienceSamplingDto';
-import { WorkHoursDto } from '../../shared/dto/WorkHoursDto'
-import { Settings } from 'electron/main'
+import DailySurveyDto, { DailySurveyResponseInput } from '../../shared/dto/DailySurveyDto';
+import { WorkHoursDto } from '../../shared/dto/WorkHoursDto';
+import { Settings } from 'electron/main';
+import type {
+  DailySurveySamplingType,
+  ExperienceSamplingAnswerType
+} from '../../shared/StudyConfiguration';
+import type { ActivitySessions, TimeActive } from './retrospection/types';
 
 type Commands = {
   createExperienceSample: (
     promptedAt: Date,
     question: string,
-    responseOptions: string,
-    scale: number,
-    response?: number,
-    skipped?: boolean
+    answerType: ExperienceSamplingAnswerType,
+    responseOptions: string | null,
+    scale?: number | null,
+    response?: string,
+    skipped?: boolean,
+    trigger?: 'manual' | 'auto'
   ) => Promise<void>;
+  resizeExperienceSamplingWindow: (height: number) => void;
   closeExperienceSamplingWindow: (skippedExperienceSampling: boolean) => void;
   closeOnboardingWindow: () => void;
   closeDataExportWindow: () => void;
@@ -37,12 +46,31 @@ type Commands = {
     obfuscationTerms: string[],
     encryptData: boolean,
     exportFormat: DataExportFormat,
+    exportDdlProjectName?: string
   ) => Promise<{ fullPath: string; fileName: string }>;
   revealItemInFolder: (path: string) => Promise<void>;
   openUploadUrl: () => void;
-  showDataExportError: () => void;
+  showDataExportError: (errorMessage?: string) => void;
+  confirmDDLUpload: () => Promise<boolean>;
   startAllTrackers: () => void;
   triggerPermissionCheckAccessibility: (prompt: boolean) => boolean;
   triggerPermissionCheckScreenRecording: () => boolean;
+  retrospectionGetActivities: (date: Date) => Promise<ActivitySessions[]>;
+  retrospectionLoadLongestTimeActive: (date: Date) => Promise<TimeActive | undefined>;
+  retrospectionGetTopThreeMostActiveApps: (date: Date) => Promise<ActivitySessions[]>;
+  retrospectionGetTopThreeWebsites: (date: Date) => Promise<ActivitySessions[]>;
+  retrospectionGetTopThreeWindowTitles: (date: Date) => Promise<ActivitySessions[]>;
+  openRetrospection: () => Promise<void>;
+  closeRetrospectionWindow: () => void;
+  createDailySurveyResponses: (
+    promptedAt: Date,
+    samplingType: DailySurveySamplingType,
+    scheduledDate: Date | null,
+    responses: DailySurveyResponseInput[]
+  ) => Promise<void>;
+  resizeDailySurveyWindow: (height: number) => void;
+  closeDailySurveyWindow: (skipped: boolean) => void;
+  postponeDailySurvey: (samplingType: DailySurveySamplingType, minutes: number) => Promise<void>;
+  getMostRecentDailySurveyDtos: (itemCount: number) => Promise<DailySurveyDto[]>;
 };
 export default Commands;

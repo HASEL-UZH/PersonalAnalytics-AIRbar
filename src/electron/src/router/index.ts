@@ -26,6 +26,11 @@ const router: Router = createRouter({
     },
     // ***AIRBAR - END
     {
+      path: '/daily-survey',
+      name: 'DailySurvey',
+      component: () => import('../views/DailySurveyView.vue')
+    },
+    {
       path: '/onboarding',
       name: 'Onboarding',
       component: () => import('../views/OnboardingView.vue'),
@@ -70,6 +75,11 @@ const router: Router = createRouter({
       path: '/data-export',
       name: 'DataExport',
       component: () => import('../views/DataExportView.vue')
+    },
+    {
+      path: '/retrospection',
+      name: 'Retrospection',
+      component: () => import('../views/RetrospectionView.vue')
     }
   ]
 })
