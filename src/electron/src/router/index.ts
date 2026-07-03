@@ -75,11 +75,6 @@ const router: Router = createRouter({
       path: '/data-export',
       name: 'DataExport',
       component: () => import('../views/DataExportView.vue')
-    },
-    {
-      path: '/retrospection',
-      name: 'Retrospection',
-      component: () => import('../views/RetrospectionView.vue')
     }
   ]
 })
