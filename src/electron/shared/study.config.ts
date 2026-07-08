@@ -47,12 +47,12 @@ const studyConfig: StudyConfiguration = {
           scale: 7,
           responseOptions: ['not at all productive', 'moderately productive', 'very productive']
         },
-        {
-          question: 'How well did you spend your time in the previous session?',
-          answerType: 'LikertScale',
-          scale: 5,
-          responseOptions: ['not well', 'moderately well', 'very well']
-        },
+        // {
+        //   question: 'How well did you spend your time in the previous session?',
+        //   answerType: 'LikertScale',
+        //   scale: 5,
+        //   responseOptions: ['not well', 'moderately well', 'very well']
+        // },
         // {
         //   question: 'What is one aspect that affected your ability to focus the most in the last session?',
         //   answerType: 'TextResponse',
