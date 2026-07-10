@@ -542,12 +542,12 @@ export class WindowService {
         visible: !!studyConfig.trackers.taskTracker?.enabled && settings.enabledAirbar,
         click: async () => {
           const { createPlanningViewWindow } = await import('@external/main/services/WindowService')
-          createPlanningViewWindow(true)
+          createPlanningViewWindow()
         }
       },
       {
         label: 'Show/Hide Taskbar',
-        visible: !!studyConfig.trackers.taskTracker?.enabled && settings.enabledAirbar && !!studyConfig.trackers.taskTracker?.enabledTaskbar,
+        visible: !!studyConfig.trackers.taskTracker?.enabled && settings.enabledAirbar && !!studyConfig.trackers.taskTracker?.enabledTaskbar && settings.enabledAirbarTaskbar,
         click: async () => {
           const { toggleTaskBarWindow } = await import('@external/main/services/WindowService')
           toggleTaskBarWindow()

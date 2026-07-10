@@ -16,7 +16,7 @@ const studyConfig: StudyConfiguration = {
   dataExportEncrypted: false,
   displayDaysParticipated: false,
   showActiveTimesInOnboarding: true,
-  enableRetrospection: true,
+  enableRetrospection: false, // disabled, as AIRbar has custom retrospection
   trackers: {
     // ***AIRBAR - START
     taskTracker: {
