@@ -25,6 +25,7 @@ export interface TaskTrackerConfiguration {
 export interface ExperienceSamplingTrackerConfiguration {
   enabled: boolean;
   questions: ExperienceSamplingQuestion[];
+  showAllQuestionsTogether?: boolean;
   intervalInMs: number;
   // value between 0 and 1
   // 0: no randomization, 1: randomization of 100%

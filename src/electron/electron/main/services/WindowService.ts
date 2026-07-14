@@ -47,6 +47,11 @@ export class WindowService {
   }
 
   public async createExperienceSamplingWindow(isManuallyTriggered: boolean = false) {
+    if (studyConfig.trackers.experienceSamplingTracker.questions.length === 0) {
+      LOG.warn('No experience sampling questions configured; not opening popup')
+      return
+    }
+
     if (this.experienceSamplingWindow) {
       this.experienceSamplingWindow.close()
       this.experienceSamplingWindow = null
@@ -117,7 +122,8 @@ export class WindowService {
   public resizeExperienceSamplingWindow(height: number) {
     if (this.experienceSamplingWindow) {
       const minHeight = 120
-      const maxHeight = 600
+      const { height: screenHeight } = screen.getPrimaryDisplay().workAreaSize
+      const maxHeight = Math.min(Math.round(screenHeight * 0.85), 900)
       const clamped = Math.max(minHeight, Math.min(maxHeight, height))
       this.experienceSamplingWindow.setContentSize(500, clamped)
     }
@@ -474,11 +480,13 @@ export class WindowService {
     if (!this.tray) return
     LOG.debug('Updating tray')
     const menuTemplate: MenuItemConstructorOptions[] = await this.getTrayMenuTemplate()
-    menuTemplate[1].label = updaterLabel
-    menuTemplate[1].enabled = updaterMenuEnabled
+    const updaterMenuItem = menuTemplate.find((item) => item.id === 'check-for-updates')
+    if (updaterMenuItem) {
+      updaterMenuItem.label = updaterLabel
+      updaterMenuItem.enabled = updaterMenuEnabled
+    }
 
     this.tray.setContextMenu(Menu.buildFromTemplate(menuTemplate))
-    this.tray.on("click", () => { this.tray?.popUpContextMenu() })
     this.tray.setToolTip(`${is.dev ? '[DEV MODE] ' : ''}Personal Analytics is running...\n\nYou are participating in: ${studyConfig.name}`)
   }
 
@@ -492,6 +500,7 @@ export class WindowService {
     const trayImage = nativeImage.createFromPath(appIcon)
     trayImage.setTemplateImage(true)
     this.tray = new Tray(trayImage)
+    this.tray.on('click', () => this.tray?.popUpContextMenu())
     await this.updateTray()
   }
 
@@ -506,10 +515,12 @@ export class WindowService {
       (!allowDisable || (settings?.userDisabledExperienceSampling ?? 0) === 0);
     
     const trayMenuItems: MenuItemConstructorOptions[] = [
-      { label: '⚠ DEV MODE', enabled: false, visible: is.dev },
-      { type: 'separator', visible: is.dev },
+      ...(is.dev
+        ? [{ label: '⚠ DEV MODE', enabled: false }, { type: 'separator' as const }]
+        : []),
       { label: `Version ${app.getVersion()}`, enabled: false },
       {
+        id: 'check-for-updates',
         label: 'Check for updates',
         enabled: false,
         click: () => this.appUpdaterService.checkForUpdates({ silent: false })
