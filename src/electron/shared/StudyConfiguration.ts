@@ -17,8 +17,11 @@ export interface WindowActivityTrackerConfiguration {
 // ***AIRBAR - START
 export interface TaskTrackerConfiguration {
   enabled: boolean
+  taskContextCapturingEnabled: boolean
   enabledTaskbar: boolean
   enabledRetrospection: boolean
+  defaultExcludedApps: string[]
+  defaultExcludedWebsites: string[]
 }
 // ***AIRBAR - END
 

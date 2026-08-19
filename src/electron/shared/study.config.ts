@@ -21,8 +21,11 @@ const studyConfig: StudyConfiguration = {
     // ***AIRBAR - START
     taskTracker: {
       enabled: true,
+      taskContextCapturingEnabled: true,
       enabledTaskbar: true,
-      enabledRetrospection: true
+      enabledRetrospection: true,
+      defaultExcludedApps: [],
+      defaultExcludedWebsites: []
     },
     // ***AIRBAR - END
     enabledWorkHours: true,
