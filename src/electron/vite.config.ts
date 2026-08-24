@@ -12,7 +12,7 @@ import pkg from './package.json';
 export default defineConfig(({ command }) => {
   fs.rmSync('dist-electron', { recursive: true, force: true });
  
-  const selfReflectionDir = path.resolve(__dirname, 'PA.SelfReflection/src'); // ***AIRBAR
+  const taskSnapDir = path.resolve(__dirname, 'PA.TaskSnap/src'); // ***AIRBAR
        
   const isServe = command === 'serve';
   const isBuild = command === 'build';
@@ -23,7 +23,7 @@ export default defineConfig(({ command }) => {
       // ***AIRBAR - START
       // this works for the renderer files, but does not work for the main files
       alias({
-        entries: [ { find: '@externalVue', replacement: selfReflectionDir} ]
+        entries: [ { find: '@externalVue', replacement: taskSnapDir} ]
       }),
       // ***AIRBAR - END
       vue(),
@@ -41,7 +41,7 @@ export default defineConfig(({ command }) => {
                 plugins:  
                   // for the main files...
                   alias({
-                    entries: [ { find: '@external', replacement: selfReflectionDir } ]
+                    entries: [ { find: '@external', replacement: taskSnapDir } ]
                 }),
                 // ***AIRBAR - END
                 
