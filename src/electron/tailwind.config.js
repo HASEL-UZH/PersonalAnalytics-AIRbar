@@ -2,7 +2,7 @@
 import colors from 'tailwindcss/colors'
 
 module.exports = {
-  content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}', './PA.SelfReflection/src/**/*.{vue,js,ts,jsx,tsx}'], // ***AIRBAR - added PA.SelfReflection
+  content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}', './PA.TaskSnap/src/**/*.{vue,js,ts,jsx,tsx}'], // ***AIRBAR - added PA.TaskSnap
   plugins: [require('@tailwindcss/typography'), require('daisyui')],
   theme: {
     extend: {
