@@ -27,17 +27,20 @@ const studyConfig: StudyConfiguration = {
     // ***AIRBAR - END
     enabledWorkHours: true,
     windowActivityTracker: {
+      name: 'Window Activity Monitor',
       enabled: true,
       intervalInMs: 1000,
       trackUrls: false,
       trackWindowTitles: true
     },
     userInputTracker: {
+      name: 'User Input Monitor',
       enabled: true,
       intervalInMs: 60000,
       collectKeyDetails: false
     },
     experienceSamplingTracker: {
+      name: 'Experience Sampling',
       enabled: true,
       questions: [
         {
