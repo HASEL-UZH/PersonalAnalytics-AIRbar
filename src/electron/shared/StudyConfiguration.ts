@@ -1,6 +1,7 @@
 import { DataExportFormat } from './DataExportFormat.enum';
 
 export interface UserInputTrackerConfiguration {
+  name: string;
   enabled: boolean;
   intervalInMs: number;
   // Optional flag for detailed key category counts (defaults to false).
@@ -8,10 +9,11 @@ export interface UserInputTrackerConfiguration {
 }
 
 export interface WindowActivityTrackerConfiguration {
-  enabled: boolean
-  intervalInMs: number
-  trackUrls: boolean
-  trackWindowTitles: boolean
+  name: string;
+  enabled: boolean;
+  intervalInMs: number;
+  trackUrls: boolean;
+  trackWindowTitles: boolean;
 }
 
 // ***AIRBAR - START
@@ -23,8 +25,10 @@ export interface TaskTrackerConfiguration {
 // ***AIRBAR - END
 
 export interface ExperienceSamplingTrackerConfiguration {
+  name: string;
   enabled: boolean;
   questions: ExperienceSamplingQuestion[];
+  showAllQuestionsTogether?: boolean;
   intervalInMs: number;
   // value between 0 and 1
   // 0: no randomization, 1: randomization of 100%
@@ -38,10 +42,7 @@ export interface ExperienceSamplingTrackerConfiguration {
 }
 
 export type ExperienceSamplingAnswerType =
-  | 'LikertScale'
-  | 'TextResponse'
-  | 'SingleChoice'
-  | 'MultiChoice';
+  'LikertScale' | 'TextResponse' | 'SingleChoice' | 'MultiChoice';
 
 export interface ExperienceSamplingQuestionBase {
   question: string;
@@ -65,7 +66,8 @@ export interface ChoiceQuestion extends ExperienceSamplingQuestionBase {
   responseOptions: string[];
 }
 
-export type ExperienceSamplingQuestion = LikertScaleQuestion | TextResponseQuestion | ChoiceQuestion;
+export type ExperienceSamplingQuestion =
+  LikertScaleQuestion | TextResponseQuestion | ChoiceQuestion;
 
 export type DailySurveySamplingType = 'morning' | 'evening';
 

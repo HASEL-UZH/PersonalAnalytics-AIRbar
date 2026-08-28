@@ -8,7 +8,9 @@ import type { ExperienceSamplingQuestion } from '../../../shared/StudyConfigurat
 const es = studyConfig.trackers.experienceSamplingTracker
 const allowUserToDisable = es.allowUserToDisable ?? true
 const allowUserToChangeInterval = es.allowUserToChangeInterval ?? true
-const enableRetrospection = studyConfig.enableRetrospection ?? true
+// ***AIRBAR: hidden, the AIRbar retrospection has its own settings in AirbarView
+const enableRetrospection =
+  (studyConfig.enableRetrospection ?? true) && !studyConfig.trackers.taskTracker?.enabledRetrospection
 
 const disabled = ref(false)
 const retrospectionDisabled = ref(false)

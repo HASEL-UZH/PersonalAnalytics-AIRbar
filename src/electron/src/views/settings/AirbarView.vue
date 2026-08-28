@@ -104,9 +104,9 @@ const onChangeAirbarTaskPlanningEnabled = async (e: Event) => {
     <template v-if="isEnabled && enabledTaskBarByResearcher">
       <div class="container">
         <div class="mt-8">
-          <Switch :modelValue="isEnabledAirbarTaskPlanning" :label="'Enable/disable task planning'"
+          <Switch :modelValue="isEnabledAirbarTaskPlanning" :label="'Automatically open task planning'"
             :on-change="onChangeAirbarTaskPlanningEnabled" />
-          <span class="italic">Enable or disable morning task planning popup for AIRbar.</span>
+          <span class="italic">Automatically open the task planning popup at the start of the workday.</span>
         </div>
         <div class="mt-8">
           <Switch :modelValue="isEnabledTaskbar" :label="'Enable/disable taskbar'"
@@ -120,9 +120,9 @@ const onChangeAirbarTaskPlanningEnabled = async (e: Event) => {
         </div>
         <template v-if="enabledRetrospectionByResearcher">
           <div class="mt-8">
-            <Switch :modelValue="isEnabledAirbarRetrospection" :label="'Enable/disable retrospection'"
+            <Switch :modelValue="isEnabledAirbarRetrospection" :label="'Automatically open retrospection'"
               :on-change="onChangeAirbarRetrospectionEnabled" />
-            <span class="italic">Enable or disable evening retrospection popup for AIRbar.</span>
+            <span class="italic">Automatically open the retrospection at the end of the workday.</span>
           </div>
         </template>
       </div>

@@ -16,7 +16,7 @@ const studyConfig: StudyConfiguration = {
   dataExportEncrypted: false,
   displayDaysParticipated: false,
   showActiveTimesInOnboarding: true,
-  enableRetrospection: true,
+  enableRetrospection: true, // ***AIRBAR: rerouted to the AIRbar retrospection in WindowService
   trackers: {
     // ***AIRBAR - START
     taskTracker: {
@@ -27,17 +27,20 @@ const studyConfig: StudyConfiguration = {
     // ***AIRBAR - END
     enabledWorkHours: true,
     windowActivityTracker: {
+      name: 'Window Activity Monitor',
       enabled: true,
       intervalInMs: 1000,
       trackUrls: false,
       trackWindowTitles: true
     },
     userInputTracker: {
+      name: 'User Input Monitor',
       enabled: true,
       intervalInMs: 60000,
       collectKeyDetails: false
     },
     experienceSamplingTracker: {
+      name: 'Experience Sampling',
       enabled: true,
       questions: [
         {
@@ -47,12 +50,12 @@ const studyConfig: StudyConfiguration = {
           scale: 7,
           responseOptions: ['not at all productive', 'moderately productive', 'very productive']
         },
-        {
-          question: 'How well did you spend your time in the previous session?',
-          answerType: 'LikertScale',
-          scale: 5,
-          responseOptions: ['not well', 'moderately well', 'very well']
-        },
+        // {
+        //   question: 'How well did you spend your time in the previous session?',
+        //   answerType: 'LikertScale',
+        //   scale: 5,
+        //   responseOptions: ['not well', 'moderately well', 'very well']
+        // },
         // {
         //   question: 'What is one aspect that affected your ability to focus the most in the last session?',
         //   answerType: 'TextResponse',
@@ -70,6 +73,7 @@ const studyConfig: StudyConfiguration = {
         //   responseOptions: ['Notifications', 'Meetings', 'Context switching', 'Personal interruptions', 'None']
         // }
       ],
+      showAllQuestionsTogether: false,
       intervalInMs: 1000 * 60 * 60 * 1, // default interval (must be listed in userDefinedInterval_h if set)
       samplingRandomization: 0.2, // 20% randomization, so the interval will be between 48 and 72 minutes
       allowUserToDisable: true,
@@ -83,15 +87,13 @@ const studyConfig: StudyConfiguration = {
           samplingType: 'morning',
           delayInMinutes: 5,
           requireAllAnswers: false,
-          questions: [
-          ]
+          questions: []
         },
         {
           samplingType: 'evening',
           delayInMinutes: -30,
           requireAllAnswers: false,
-          questions: [
-          ]
+          questions: []
         }
       ]
     }
