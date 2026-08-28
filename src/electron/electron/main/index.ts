@@ -157,7 +157,9 @@ app.whenReady().then(async () => {
     await windowService.init();
     await ipcHandler.init();
 
-    if (studyConfig.enableRetrospection ?? true) {
+    // ***AIRBAR: AIRbar runs its own SchedulingService (WorkScheduleService.init);
+    // constructing this one too would schedule the retrospection twice.
+    if ((studyConfig.enableRetrospection ?? true) && !studyConfig.trackers.taskTracker?.enabled) {
       const workSchedule = await workScheduleService.getWorkSchedule();
       const schedulingService = new SchedulingService(windowService, workSchedule);
       ipcHandler.setSchedulingService(schedulingService);

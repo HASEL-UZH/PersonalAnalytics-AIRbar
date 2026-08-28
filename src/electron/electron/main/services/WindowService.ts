@@ -345,6 +345,17 @@ export class WindowService {
   }
 
   private async createRetrospectionWindow() {
+    // ***AIRBAR - START
+    // Open the AIRbar retrospection instead. Must go through the AIRbar module: it owns the
+    // window handle its scheduler also uses, so building it here could leave two windows open.
+    const taskTracker = studyConfig.trackers.taskTracker
+    if (!!taskTracker?.enabled && !!taskTracker?.enabledRetrospection) {
+      const { createRetrospectionWindow } = await import('@external/main/services/WindowService')
+      await createRetrospectionWindow()
+      return
+    }
+    // ***AIRBAR - END
+
     this.closeRetrospectionWindow()
 
     const __filename = fileURLToPath(import.meta.url)
