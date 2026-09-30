@@ -20,13 +20,13 @@ defineProps({
         <tr>
           <td class="w-40">Your Subject Id:</td>
           <td>
-            <span class="badge badge-neutral text-white subject-badge">{{ studyInfo.subjectId }}</span>
+            <span class="subject-badge badge badge-neutral">{{ studyInfo.subjectId }}</span>
           </td>
         </tr>
         <tr>
           <td class="w-40">License:</td>
           <td>
-            <span class="badge badge-neutral text-white license-badge">Research Preview License</span>
+            <span class="license-badge badge badge-neutral text-white">Research Preview License</span>
           </td>
         </tr>
         <tr>
@@ -52,8 +52,7 @@ defineProps({
   </article>
 </template>
 <style lang="less">
-@import '@/styles/index.less';
-@import '../styles/tailwind-apply.css';
+@import '@/styles/variables.less';
 .subject-badge {
   background-color: @primary-color;
 }

@@ -2,11 +2,10 @@
   "compilerOptions": {
     "composite": true,
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "experimentalDecorators": true,
-    "baseUrl": ".",
+    "experimentalDecorators": true
   },
-  "include": ["vite.config.ts", "package.json", "electron"]
+  "include": ["vite.config.ts", "package.json", "electron", "PA.SelfReflection/src/main", "PA.SelfReflection/src/shared"] // ***AIRBAR: SelfReflection main code needs experimentalDecorators
 }
