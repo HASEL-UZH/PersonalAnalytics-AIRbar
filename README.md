@@ -21,8 +21,9 @@ Anyone is welcome to contribute to PersonalAnalytics by extending it with new tr
 
 ## 🧑‍💻 Installation & Usage as a User
 
-[![Downloads](https://img.shields.io/github/downloads/HASEL-UZH/PersonalAnalytics/total)](https://github.com/HASEL-UZH/PersonalAnalytics/releases)
-[![Release](https://img.shields.io/github/v/release/HASEL-UZH/PersonalAnalytics)](https://github.com/HASEL-UZH/PersonalAnalytics/releases/latest)
+<!-- ***AIRBAR: download and release badges point to this fork instead of upstream -->
+[![Downloads](https://img.shields.io/github/downloads/HASEL-UZH/PersonalAnalytics-AIRbar/total)](https://github.com/HASEL-UZH/PersonalAnalytics-AIRbar/releases)
+[![Release](https://img.shields.io/github/v/release/HASEL-UZH/PersonalAnalytics-AIRbar)](https://github.com/HASEL-UZH/PersonalAnalytics-AIRbar/releases/latest)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-blue)
 
 Anyone may install PersonalAnalytics on their Windows or macOS device to non-intrusively collect computer interaction data, and analyze their activity, time spent and work habits for themselves. In the future, once we'll re-introduce the Retrospection (i.e. visualizations of the collected and self-reported data), it will be much easier to gain insights again.
