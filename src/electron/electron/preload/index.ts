@@ -8,6 +8,11 @@ const api: Api = {
   onRemindToTrackTime: (callback) =>
     ipcRenderer.on('remindToTrackTime', (_event, reason) => callback(reason)),
   onTaskWidgetWindowFocused: (callback) => ipcRenderer.on('taskWidgetWindowFocused', callback),
+  onTaskbarHoverChanged: (callback) =>
+    ipcRenderer.on('taskbarHoverChanged', (_event, isHovered) => callback(isHovered)),
+  onTaskbarMovedByUser: (callback) => ipcRenderer.on('taskbarMovedByUser', callback),
+  onTaskbarSideChanged: (callback) =>
+    ipcRenderer.on('taskbarSideChanged', (_event, side) => callback(side)),
   isMacOS: (): boolean => process.platform === 'darwin'
 };
 
@@ -15,6 +20,9 @@ interface Api {
   onLoadTaskbarTasks: (cb) => void;
   onRemindToTrackTime: (cb) => void;
   onTaskWidgetWindowFocused: (cb) => void;
+  onTaskbarHoverChanged: (cb: (isHovered: boolean) => void) => void;
+  onTaskbarMovedByUser: (cb: () => void) => void;
+  onTaskbarSideChanged: (cb: (side: 'left' | 'right') => void) => void;
   isMacOS: () => boolean;
 }
 

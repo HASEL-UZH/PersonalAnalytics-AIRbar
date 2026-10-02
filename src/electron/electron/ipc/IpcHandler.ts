@@ -1,5 +1,5 @@
 import { ExperienceSamplingService } from '../main/services/ExperienceSamplingService';
-import { app, dialog, ipcMain, IpcMainInvokeEvent, shell, systemPreferences } from 'electron';
+import { app, dialog, ipcMain, IpcMainInvokeEvent, Menu, shell, systemPreferences } from 'electron';
 import { WindowService } from '../main/services/WindowService';
 import { getMainLogger } from '../config/Logger';
 import { TypedIpcMain } from '../../src/utils/TypedIpcMain';
@@ -116,6 +116,7 @@ export class IpcHandler {
       triggerPermissionCheckScreenRecording: this.triggerPermissionCheckScreenRecording,
       retrospectionGetDashboard: this.retrospectionGetDashboard,
       openRetrospection: this.openRetrospection,
+      taskbarShowMenu: this.taskbarShowMenu,
       closeRetrospectionWindow: this.closeRetrospectionWindow,
       createDailySurveyResponses: this.createDailySurveyResponses,
       resizeDailySurveyWindow: this.resizeDailySurveyWindow,
@@ -432,6 +433,36 @@ export class IpcHandler {
   private async openRetrospection(): Promise<void> {
     await this.windowService.focusOrCreateRetrospectionWindow();
   }
+
+  // ***AIRBAR - START
+  // Context menu of the floating taskbar
+  private async taskbarShowMenu(): Promise<void> {
+    const { getTaskBarWindow, createPlanningViewWindow, closeTaskBarWindow } =
+      await import('@external/main/services/WindowService');
+    const logError = (err: unknown) => LOG.error('Error handling taskbar menu click', err);
+    const menu = Menu.buildFromTemplate([
+      {
+        label: 'Edit/Prioritize Tasks',
+        click: () => createPlanningViewWindow().catch(logError)
+      },
+      {
+        label: 'Retrospection',
+        visible: !!studyConfig.trackers.taskTracker?.enabledRetrospection,
+        click: () => this.windowService.focusOrCreateRetrospectionWindow().catch(logError)
+      },
+      {
+        label: 'Settings',
+        click: () => this.windowService.createSettingsWindow().catch(logError)
+      },
+      { type: 'separator' },
+      {
+        label: 'Hide Taskbar',
+        click: () => closeTaskBarWindow()
+      }
+    ]);
+    menu.popup({ window: getTaskBarWindow() ?? undefined });
+  }
+  // ***AIRBAR - END
 
   private closeRetrospectionWindow(): void {
     this.windowService.closeRetrospectionWindow();
