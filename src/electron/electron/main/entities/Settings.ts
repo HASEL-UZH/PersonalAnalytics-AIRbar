@@ -46,6 +46,10 @@ export class Settings extends BaseEntity {
 
   @Column({ type: 'boolean', nullable: false, default: true })
   enabledAirbarRetrospection: boolean;
+
+  // number of leftover tasks from previous sessions shown in the task planning (3, 6 or 9)
+  @Column({ type: 'int', nullable: false, default: 6 })
+  airbarMaxLeftoverTasks: number;
   // ***AIRBAR - END
 
   @Column({ type: 'boolean', nullable: false, default: false })
