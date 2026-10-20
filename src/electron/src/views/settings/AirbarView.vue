@@ -124,7 +124,7 @@ const onChangeMaxLeftoverTasks = async (e: Event) => {
         </div>
         <div class="mt-8">
           <label class="label pb-0">
-            <span class="label-text text-base dark:text-gray-300">Leftover tasks shown in the task planning</span>
+            <span class="label-text text-base dark:text-gray-300">Maximum number of leftover tasks shown in the task planning</span>
           </label>
           <select
             class="select select-bordered mt-2 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
@@ -133,7 +133,6 @@ const onChangeMaxLeftoverTasks = async (e: Event) => {
           >
             <option v-for="n in maxLeftoverTasksOptions" :key="n" :value="n">{{ n }}</option>
           </select>
-          <span class="italic block">Maximum number of unfinished tasks from previous days to show when planning your day.</span>
         </div>
         <div class="mt-8">
           <Switch :modelValue="isEnabledTaskbar" :label="'Enable/disable taskbar'"
