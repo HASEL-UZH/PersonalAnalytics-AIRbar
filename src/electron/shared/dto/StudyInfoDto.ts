@@ -15,5 +15,6 @@ export default interface StudyInfoDto {
   enabledAirbarTaskPlanning: boolean;
   enabledAirbarTimeTracking: boolean;
   enabledAirbarRetrospection: boolean;
+  airbarMaxLeftoverTasks: number;
   // ***AIRBAR - END
 }
