@@ -234,7 +234,8 @@ export class IpcHandler {
       closeTaskBarWindow, 
       closeRetrospectionWindow,
       createPlanningOrTaskbarWindow,
-      reloadTaskBarWindowIfOpen } = await import('@external/main/services/WindowService')
+      reloadTaskBarWindowIfOpen,
+      resetTaskBarPosition } = await import('@external/main/services/WindowService')
     if (prop === 'enabledAirbar'){
         if(!value) {
         await closePlanningWindow()
@@ -254,6 +255,10 @@ export class IpcHandler {
 
     if (prop === 'enabledAirbarTimeTracking') {
       reloadTaskBarWindowIfOpen()
+    }
+
+    if (prop === 'taskbarPositions') {
+      await resetTaskBarPosition()
     }
 
     try {

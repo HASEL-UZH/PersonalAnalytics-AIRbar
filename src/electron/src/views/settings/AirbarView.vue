@@ -53,6 +53,14 @@ const onChangeAirbarTaskbarEnabled = async (e: Event) => {
   }
 }
 
+const onResetTaskbarPosition = async () => {
+  try {
+    await typedIpcRenderer.invoke('setSettingsProp', 'taskbarPositions', null)
+  } catch (error) {
+    console.error('Error resetting AIRbar taskbar position:', error)
+  }
+}
+
 const onChangeAirbarTimeTrackingEnabled = async (e: Event) => {
   const isChecked = (e.target as HTMLInputElement).checked
   isEnabledAirbarTimeTracking.value = isChecked
@@ -138,6 +146,10 @@ const onChangeMaxLeftoverTasks = async (e: Event) => {
           <Switch :modelValue="isEnabledTaskbar" :label="'Enable/disable taskbar'"
             :on-change="onChangeAirbarTaskbarEnabled" />
           <span class="italic">Enable or disable the always-on-top taskbar window.</span>
+          <div v-if="isEnabledTaskbar">
+            <a class="text-sm underline cursor-pointer" title="Moves the taskbar back to the top-right corner of the main screen"
+              @click="onResetTaskbarPosition">Reset taskbar position</a>
+          </div>
         </div>
         <div class="mt-8">
           <Switch :modelValue="isEnabledAirbarTimeTracking" :label="'Enable/disable time tracking'"
