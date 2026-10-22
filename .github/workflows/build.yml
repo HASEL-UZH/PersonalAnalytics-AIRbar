@@ -38,17 +38,19 @@ jobs:
         run: npx install-electron --no
       - name: Test
         run: npm test
+      # Publishing happens in the publish job below, so a flaky release lookup can't silently skip
+      # an upload and the two macOS builds can't overwrite each other's latest-mac.yml
       - name: Build
         shell: bash
         run: |
           if [ -n "${{ matrix.mac_arch }}" ]; then
             if [ "${{ matrix.mac_arch }}" == "arm64" ]; then
-              npm run build:mac:arm64
+              npm run build:mac:arm64 -- --publish never
             else
-              npm run build:mac:x64
+              npm run build:mac:x64 -- --publish never
             fi
           else
-            npm run build
+            npm run build -- --publish never
           fi
         env:
           NODE_OPTIONS: --max-old-space-size=4096
@@ -65,3 +67,49 @@ jobs:
           AZURE_CERT_PROFILE_NAME: ${{ secrets.AZURE_CERT_PROFILE_NAME }}
           CSC_LINK: ${{ secrets.CSC_LINK }}
           CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+      - name: Rename update info
+        if: matrix.mac_arch
+        shell: bash
+        run: mv release/*/latest-mac.yml release/latest-mac-${{ matrix.mac_arch }}.yml
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.mac_arch || 'windows' }}
+          if-no-files-found: error
+          path: |
+            src/electron/release/*/PersonalAnalytics-*.dmg
+            src/electron/release/*/PersonalAnalytics-*.zip
+            src/electron/release/*/PersonalAnalytics-*.zip.blockmap
+            src/electron/release/*/PersonalAnalytics-*-Windows.exe
+            src/electron/release/*/latest.yml
+            src/electron/release/latest-mac-*.yml
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+      - name: Merge macOS update info
+        run: |
+          # Combine both architectures into one latest-mac.yml (files lists appended, x64 kept as top-level path)
+          yq eval-all '. as $item ireduce ({}; . *+ $item)' artifacts/latest-mac-arm64.yml artifacts/latest-mac-x64.yml > latest-mac.yml
+          rm artifacts/latest-mac-*.yml
+          mv latest-mac.yml artifacts/
+          cat artifacts/latest-mac.yml
+      - name: Publish to GitHub release
+        run: |
+          VERSION=$(jq -r .version src/electron/package.json)
+          TAG="v$VERSION"
+          if IS_DRAFT=$(gh release view "$TAG" --json isDraft -q .isDraft 2>/dev/null); then
+            if [ "$IS_DRAFT" != "true" ]; then
+              echo "::error::Release $TAG is already published; bump the version before building."
+              exit 1
+            fi
+          else
+            gh release create "$TAG" --draft --title "$VERSION" --notes ""
+          fi
+          find artifacts -type f -print -exec gh release upload "$TAG" --clobber {} +
