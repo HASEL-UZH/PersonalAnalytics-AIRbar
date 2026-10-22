@@ -50,6 +50,10 @@ export class Settings extends BaseEntity {
   // number of leftover tasks from previous sessions shown in the task planning (3, 6 or 9)
   @Column({ type: 'int', nullable: false, default: 6 })
   airbarMaxLeftoverTasks: number;
+
+  // last taskbar position per display setup, e.g. { "0,0,1920x1080|1920,0,2560x1440": { x: 3900, y: 60 } }
+  @Column({ type: 'simple-json', nullable: true })
+  taskbarPositions: Record<string, { x: number; y: number }> | null;
   // ***AIRBAR - END
 
   @Column({ type: 'boolean', nullable: false, default: false })
