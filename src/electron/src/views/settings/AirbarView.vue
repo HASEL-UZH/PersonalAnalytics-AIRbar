@@ -12,6 +12,8 @@ const isEnabledTaskbar = ref(true)
 const isEnabledAirbarTimeTracking = ref(true)
 const isEnabledAirbarTaskPlanning = ref(true)
 const isEnabledAirbarRetrospection = ref(true)
+const maxLeftoverTasks = ref(6)
+const maxLeftoverTasksOptions = [3, 6, 9]
 const enabledTaskBarByResearcher = ref(studyConfig.trackers.taskTracker?.enabledTaskbar)
 const enabledRetrospectionByResearcher = ref(studyConfig.trackers.taskTracker?.enabledRetrospection)
 
@@ -23,6 +25,7 @@ onMounted(async () => {
     isEnabledAirbarTimeTracking.value = settings.enabledAirbarTimeTracking
     isEnabledAirbarTaskPlanning.value = settings.enabledAirbarTaskPlanning
     isEnabledAirbarRetrospection.value = settings.enabledAirbarRetrospection
+    maxLeftoverTasks.value = settings.airbarMaxLeftoverTasks
   } catch (error) {
     console.error('Error getting settings:', error)
   }
@@ -47,6 +50,14 @@ const onChangeAirbarTaskbarEnabled = async (e: Event) => {
     await typedIpcRenderer.invoke('setSettingsProp', 'enabledAirbarTaskbar', isChecked)
   } catch (error) {
     console.error('Error setting AIRbar taskbar enabled:', error)
+  }
+}
+
+const onResetTaskbarPosition = async () => {
+  try {
+    await typedIpcRenderer.invoke('setSettingsProp', 'taskbarPositions', null)
+  } catch (error) {
+    console.error('Error resetting AIRbar taskbar position:', error)
   }
 }
 
@@ -83,6 +94,17 @@ const onChangeAirbarTaskPlanningEnabled = async (e: Event) => {
   }
 }
 
+const onChangeMaxLeftoverTasks = async (e: Event) => {
+  const value = Number((e.target as HTMLSelectElement).value)
+  maxLeftoverTasks.value = value
+
+  try {
+    await typedIpcRenderer.invoke('setSettingsProp', 'airbarMaxLeftoverTasks', value)
+  } catch (error) {
+    console.error('Error setting AIRbar max leftover tasks:', error)
+  }
+}
+
 </script>
 
 <template>
@@ -109,9 +131,25 @@ const onChangeAirbarTaskPlanningEnabled = async (e: Event) => {
           <span class="italic">Automatically open the task planning popup at the start of the workday.</span>
         </div>
         <div class="mt-8">
+          <label class="label pb-0">
+            <span class="label-text text-base dark:text-gray-300">Maximum number of leftover tasks shown in the task planning</span>
+          </label>
+          <select
+            class="select select-bordered mt-2 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+            :value="maxLeftoverTasks"
+            @change="onChangeMaxLeftoverTasks"
+          >
+            <option v-for="n in maxLeftoverTasksOptions" :key="n" :value="n">{{ n }}</option>
+          </select>
+        </div>
+        <div class="mt-8">
           <Switch :modelValue="isEnabledTaskbar" :label="'Enable/disable taskbar'"
             :on-change="onChangeAirbarTaskbarEnabled" />
           <span class="italic">Enable or disable the always-on-top taskbar window.</span>
+          <div v-if="isEnabledTaskbar">
+            <a class="text-sm underline cursor-pointer" title="Moves the taskbar back to the top-right corner of the main screen"
+              @click="onResetTaskbarPosition">Reset taskbar position</a>
+          </div>
         </div>
         <div class="mt-8">
           <Switch :modelValue="isEnabledAirbarTimeTracking" :label="'Enable/disable time tracking'"
